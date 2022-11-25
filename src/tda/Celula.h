@@ -26,6 +26,8 @@ class Celula {
     void actualizarGen(unsigned int posicion, unsigned int cargaGenetica);
     void revivir();
     void matar();
+    bool celulaViva();
+    bool celulaMuerta();
 };
 
 
@@ -81,6 +83,22 @@ Celula::~Celula() {
 */
 EstadoCelula Celula::getEstado(){
   return this->estado;
+}
+
+/*
+  pre: -
+  pos: devulve true si la celula esta viva
+*/
+bool Celula::celulaViva(){
+  return this->estado == Viva;
+}
+
+/*
+  pre: -
+  pos: devulve true si la celula esta muerta
+*/
+bool Celula::celulaMuerta(){
+  return this->estado == Muerta;
 }
 
 /*

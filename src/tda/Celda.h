@@ -26,12 +26,14 @@ class Celda {
     Celda(unsigned int nivel, unsigned int fila, unsigned int columna);
     ~Celda();
     EstadoCelula getEstadoCelula();
-    void revivirCelula();
-    void matarCelula();
-    void marcarCelula();
+    void revivirCelula(bool futura);
+    void matarCelula(bool futura);
     unsigned int getNivel();
     unsigned int getFila();
     unsigned int getColumna();
+    bool estaVacia();
+    bool celulaViva();
+    bool celulaMuerta();
 };
 
 /*
@@ -68,31 +70,49 @@ EstadoCelula Celda::getEstadoCelula(){
   pre: -
   pos: cambia el estado de la celula a Viva
 */
-void Celda::revivirCelula(){
-  this->celula->revivir();
+void Celda::revivirCelula(bool futura){
+  if(futura){
+    this->celulaFutura->revivir();
+  }
+  else{
+    this->celula->revivir();
+  }
 }
 
 /*
   pre: -
   pos: cambia el estado de la celula a Viva
 */
-void Celda::matarCelula(){
-  this->celula->matar();
-}
-
-void Celda::marcarCelula(){
-  this->celula->marcar();
+void Celda::matarCelula(bool futura){
+  if(futura){
+    this->celulaFutura->matar();
+  }
+  else{
+    this->celula->matar();
+  }
 }
 
 unsigned int Celda::getNivel(){
   return this->nivel;
 }
+
 unsigned int Celda::getFila(){
   return this->fila;
 }
+
 unsigned int Celda::getColumna(){
   return this->columna;
 }
 
+bool Celda::estaVacia(){
+  return this == NULL;
+}
+
+bool Celda::celulaViva(){
+  return this->celula->celulaViva();
+}
+bool Celda::celulaMuerta(){
+  return this->celula->celulaMuerta();
+}
 
 #endif // CELDA_H_
