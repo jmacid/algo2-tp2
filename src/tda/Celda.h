@@ -17,23 +17,34 @@ class Celda {
     Celula * celula;
     Celula * celulaFutura;
     Comportamiento comportamiento;
+    unsigned int nivel;
+    unsigned int fila;
+    unsigned int columna;
+
   
   public:
-    Celda();
+    Celda(unsigned int nivel, unsigned int fila, unsigned int columna);
     ~Celda();
     EstadoCelula getEstadoCelula();
     void revivirCelula();
     void matarCelula();
+    void marcarCelula();
+    unsigned int getNivel();
+    unsigned int getFila();
+    unsigned int getColumna();
 };
 
 /*
   pre: -
   pos: crea una celula con la carga genetica en 0, muerta e inerte
 */
-Celda::Celda(){
+Celda::Celda(unsigned int nivel, unsigned int fila, unsigned int columna){
   this->celula = new Celula();
   this->celulaFutura = new Celula();
   this->comportamiento = Inerte;
+  this->nivel = nivel;
+  this->fila = fila;
+  this->columna = columna;
 }
 
 /*
@@ -67,6 +78,20 @@ void Celda::revivirCelula(){
 */
 void Celda::matarCelula(){
   this->celula->matar();
+}
+
+void Celda::marcarCelula(){
+  this->celula->marcar();
+}
+
+unsigned int Celda::getNivel(){
+  return this->nivel;
+}
+unsigned int Celda::getFila(){
+  return this->fila;
+}
+unsigned int Celda::getColumna(){
+  return this->columna;
 }
 
 
