@@ -21,6 +21,9 @@ class Celda {
   public:
     Celda();
     ~Celda();
+    EstadoCelula getEstadoCelula();
+    void revivirCelula();
+    void matarCelula();
 };
 
 /*
@@ -33,9 +36,37 @@ Celda::Celda(){
   this->comportamiento = Inerte;
 }
 
+/*
+  pre: -
+  pos: destruye el objeto liberando la memoria solicitada
+*/
 Celda::~Celda(){
   delete this->celula;
   delete this->celulaFutura;
+}
+
+/*
+  pre: -
+  pos: devuelve el estado de la celula actual
+*/
+EstadoCelula Celda::getEstadoCelula(){
+  return this->celula->getEstado();
+}
+
+/*
+  pre: -
+  pos: cambia el estado de la celula a Viva
+*/
+void Celda::revivirCelula(){
+  this->celula->revivir();
+}
+
+/*
+  pre: -
+  pos: cambia el estado de la celula a Viva
+*/
+void Celda::matarCelula(){
+  this->celula->matar();
 }
 
 
