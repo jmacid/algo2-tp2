@@ -13,7 +13,7 @@ int main (){
 
     Tablero * tablero = new Tablero(niveles, filas, columnas);
 
-    tablero->getCelda(1, 1, 1)->revivirCelula();
+    tablero->getCelda(1, 1, 1)->revivirCelula(false);
 
     cout << tablero->getCelda(1, 1, 1)->getEstadoCelula() << endl;
     cout << tablero->getCelda(2, 2, 2)->getEstadoCelula() << endl;
