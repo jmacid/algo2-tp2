@@ -22,6 +22,8 @@ class Celula {
     unsigned int getCargaGenetica(unsigned int posicion);
     int getCantidadGenes();
     void actualizarGen(unsigned int posicion, unsigned int cargaGenetica);
+    void revivir();
+    void matar();
 };
 
 /*
@@ -90,6 +92,22 @@ void Celula::actualizarGen(unsigned int posicion, unsigned int cargaGenetica){
   Gen * gen = this->genes->obtener(posicion);
   gen->setCargaGentica(cargaGenetica);
   return;
+}
+
+/*
+  pre: -
+  pos: cambia el estado de la celula a Viva
+*/
+void Celula::revivir(){
+  this->estado = Viva;
+}
+
+/*
+  pre: -
+  pos: cambia el estado de la celula a Muerta
+*/
+void Celula::matar(){
+  this->estado = Muerta;
 }
 
 #endif // CELULA_H_

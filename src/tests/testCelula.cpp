@@ -11,14 +11,19 @@ int main() {
 
     cout << "Estado celula: " << cell1->getEstado() << endl;
 
+    cell1->revivir();
     cell1->actualizarGen(1, 25);
     cell1->actualizarGen(2, 125);
     cell1->actualizarGen(3, 250);
 
+    cout << "Estado celula: " << cell1->getEstado() << endl;
     unsigned int longuitud = cell1->getCantidadGenes();
     for(int i = 0; i < longuitud; i++){
       cout << cell1->getCargaGenetica(i+1) << endl;
     }
+
+    cell1->matar();
+    cout << "Estado celula: " << cell1->getEstado() << endl;
 
 
     delete cell1;
