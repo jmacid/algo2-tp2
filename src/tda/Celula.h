@@ -4,6 +4,7 @@
 #include <iostream>
 #include "Gen.h"
 #include "Vector.h"
+#include "../constantes.h"
 
 enum EstadoCelula {
   Viva, 
@@ -16,6 +17,7 @@ class Celula {
     Vector<Gen *> * genes;
 
   public:
+    Celula();
     Celula(unsigned int cantidadGenes, unsigned int maximaCargaGenetica);
     ~Celula();
     EstadoCelula getEstado();
@@ -25,6 +27,21 @@ class Celula {
     void revivir();
     void matar();
 };
+
+
+/*
+  pre: -
+  pos: crea el objeto celula muerta con todos los genes en 0
+*/
+Celula::Celula() {
+  this->estado = Muerta;
+  this->genes = new Vector<Gen *>(cantidadGenes, NULL);
+
+  int longuitud = this->genes->getLongitud();
+  for(int i = 0; i < longuitud; i++ ){
+    this->genes->agregar(i + 1, new Gen(maximaCargaGenetica, 0));
+  }
+}
 
 /*
   pre: la cantidad de genes no puede ser menos o igual a cero
