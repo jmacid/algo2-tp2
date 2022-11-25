@@ -6,3 +6,5 @@ src/tests/Celda
 src/tests/testTablero
 src/tests/Celda
 src/tests/testTablero
+src/tests/template.cpp
+src/tests/testAdminDeCeldas
