@@ -1,7 +1,10 @@
 #ifndef TABLERO_H_
 #define TABLERO_H_
 
+#include <iostream>
 #include <string>
+
+using namespace std;
 
 #include "Lista.h"
 #include "Celda.h"
@@ -23,7 +26,7 @@ class Tablero {
     unsigned int getCantidadFilas();
     unsigned int getCantidadNiveles();
     Celda * getCelda(unsigned int nivel, unsigned int fila, unsigned int columna);
-    void getCeldasVecinas(/*Lista<Celda *>* celdasVecinas,*/ unsigned int nivel, unsigned int fila, unsigned int columna);
+    void getCeldasVecinas(Lista<Celda *>* celdasVecinas, unsigned int nivel, unsigned int fila, unsigned int columna);
     void getCeldasColumnaVecinas(Lista<Celda *>* celdasVecinas, Lista<Celda *> * columnaCeldas, unsigned int columna, bool incluirCentro);
     unsigned int calcularNivelCircular(unsigned int nivel, int incremento);
     unsigned int calcularColumnaCircular(unsigned int columna, int incremento);
@@ -45,7 +48,8 @@ Tablero::Tablero(unsigned int niveles, unsigned int filas, unsigned int columnas
         Lista<Celda *> * tempFila = new Lista<Celda *>();
         
         for(int k = 0; k < columnas; k++){
-          tempFila->agregar(new Celda()); // agrego el valor de la columna
+          // cout << i+1 << " " << j+1 << " " << k+1 << endl;
+          tempFila->agregar(new Celda(i+1, j+1, k+1)); // agrego el valor de la columna
         }
 
         tempNivel->agregar(tempFila); // agrego columna
@@ -94,7 +98,12 @@ unsigned int Tablero::getCantidadNiveles(){
   return this->niveles;
 }
 
+/*
+  pre: los parametros deben estar dentro del rango establecido en el construcor
+*/
 Celda * Tablero::getCelda(unsigned int nivel, unsigned int fila, unsigned int columna){
+  this->validarDimensiones(nivel, fila, columna);
+
   Lista<Lista<Celda *> *> * tempNivel = this->tablero->obtener(nivel);
   Lista<Celda *> * tempFila = tempNivel->obtener(fila);
   return tempFila->obtener(columna);
@@ -104,9 +113,9 @@ Celda * Tablero::getCelda(unsigned int nivel, unsigned int fila, unsigned int co
 /*
   pre: celdas vecinas debe estar vacia.
 */
-void Tablero::getCeldasVecinas(/*Lista<Celda *>* celdasVecinas,*/ unsigned int nivel, unsigned int fila, unsigned int columna){
-  Lista<Celda *>* celdasVecinas2 = new Lista<Celda *>();
-  if( !celdasVecinas2->estaVacia())
+void Tablero::getCeldasVecinas(Lista<Celda *>* celdasVecinas, unsigned int nivel, unsigned int fila, unsigned int columna){
+  // Lista<Celda *>* celdasVecinas2 = new Lista<Celda *>();
+  if( !celdasVecinas->estaVacia())
     throw "La lista debe estar vacia";
 
   this->validarDimensiones(nivel, fila, columna);
@@ -117,11 +126,11 @@ void Tablero::getCeldasVecinas(/*Lista<Celda *>* celdasVecinas,*/ unsigned int n
     Lista<Lista<Celda *> *> * tempNivel = this->tablero->obtener(nivelActual);
 
     for(int j = -1; j < 2; j++){
-      int filaActual = calcularFilaCircular(fila, i);
+      int filaActual = calcularFilaCircular(fila, j);
       Lista<Celda *> * tempFila = tempNivel->obtener(filaActual);
 
       bool incluirCentro = !(i == 0 && j == 0);
-      getCeldasColumnaVecinas(celdasVecinas2, tempFila, columna, incluirCentro);
+      this->getCeldasColumnaVecinas(celdasVecinas, tempFila, columna, incluirCentro);
     }
 
   }
@@ -137,7 +146,9 @@ void Tablero::getCeldasColumnaVecinas(Lista<Celda *>* celdasVecinas, Lista<Celda
   for(int i = -1; i < 2; i++){
     if( i == 0 && !incluirCentro) continue;
     unsigned int columnaActual = this->calcularColumnaCircular(columna, i);
-    celdasVecinas->agregar( columnaCeldas->obtener(columnaActual));
+    Celda * celda = columnaCeldas->obtener(columnaActual);
+    cout << "(" << celda->getNivel() << ", " << celda->getFila() << ", " << celda->getColumna() << ")" << endl;
+    celdasVecinas->agregar(celda);
   }
 }
 
