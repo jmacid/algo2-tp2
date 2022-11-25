@@ -21,6 +21,7 @@ class Celula {
     EstadoCelula getEstado();
     unsigned int getCargaGenetica(unsigned int posicion);
     int getCantidadGenes();
+    void actualizarGen(unsigned int posicion, unsigned int cargaGenetica);
 };
 
 /*
@@ -79,6 +80,16 @@ unsigned int Celula::getCargaGenetica(unsigned int posicion){
 */
 int Celula::getCantidadGenes(){
   return this->genes->getLongitud();
+}
+
+/*
+  pre: -
+  pos: retorna la cantidad de genes
+*/
+void Celula::actualizarGen(unsigned int posicion, unsigned int cargaGenetica){
+  Gen * gen = this->genes->obtener(posicion);
+  gen->setCargaGentica(cargaGenetica);
+  return;
 }
 
 #endif // CELULA_H_
