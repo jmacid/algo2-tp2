@@ -1,6 +1,8 @@
 #ifndef VECTOR_H_
 #define VECTOR_H_
 
+#include <string> 
+
 template<class T> class Vector {
 private:
 		T * datos;
@@ -47,7 +49,7 @@ public:
 		if ((posicion < 1) ||
 		   (posicion > this->longitud)) {
 			// throw "La " + posicion + " no esta en el rango 1 y " + this->longitud + " inclusive";
-      throw "La no esta en el rango 1 y inclusive";
+      throw "La posicion debe ser mayor a 0 y menor a " + std::to_string(this->longitud);
 		}
 		this->datos[posicion - 1] = dato;
 	}
@@ -60,7 +62,7 @@ public:
 		if ((posicion < 1) ||
 		   (posicion > this->longitud)) {
 			// throw "La " + posicion + " no esta en el rango 1 y " + this->longitud + " inclusive";
-      throw "La no esta en el rango 1 y inclusive";
+      throw "La posicion debe ser mayor a 0 y menor a " + std::to_string(this->longitud);
 		}
 		return this->datos[posicion - 1];
 	}
