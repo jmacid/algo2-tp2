@@ -2,8 +2,8 @@
 // Created by Tomas on 1/12/2021.
 //
 
-#ifndef UNTITLED4_LISTA_H
-#define UNTITLED4_LISTA_H
+#ifndef LISTA_H_
+#define LISTA_H_
 
 // #include <stddef.h>
 
@@ -327,4 +327,4 @@ template<class T> void Lista<T>::ligarUltimoConPrimero(){
 
 }
 
-#endif //UNTITLED4_LISTA_H
+#endif //LISTA_H_
