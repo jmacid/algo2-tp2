@@ -18,8 +18,8 @@ int main (){
     cout << tablero->getCelda(1, 1, 1)->getEstadoCelula() << endl;
     cout << tablero->getCelda(2, 2, 2)->getEstadoCelula() << endl;
 
-    // Lista<Celda *>* celdasVecinas = new Lista<Celda *>();
-    tablero->getCeldasVecinas(1, 1, 1);
+    Lista<Celda *>* celdasVecinas = new Lista<Celda *>();
+    tablero->getCeldasVecinas(celdasVecinas, 1, 1, 1);
 
     // Test circulares
     int nivelCircular = tablero->calcularNivelCircular(1,-1);
@@ -29,7 +29,7 @@ int main (){
     int columanCircular2 = tablero->calcularColumnaCircular(5,1);
     int filaCircular2 = tablero->calcularFilaCircular(1,-1);
 
-    // delete celdasVecinas;
+    delete celdasVecinas;
     delete tablero;
   }
   catch(char const* excp){
