@@ -28,6 +28,7 @@ class Celula {
     void matar();
     bool celulaViva();
     bool celulaMuerta();
+    bool estaVacia();
 };
 
 
@@ -143,6 +144,14 @@ void Celula::revivir(){
 */
 void Celula::matar(){
   this->estado = Muerta;
+}
+
+/*
+  pre: -
+  pos: devuelve true si la celula es nula
+*/
+bool Celula::estaVacia(){
+  return this == NULL;
 }
 
 #endif // CELULA_H_

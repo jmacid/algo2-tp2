@@ -34,6 +34,7 @@ class Celda {
     bool estaVacia();
     bool celulaViva();
     bool celulaMuerta();
+    unsigned int getCargaGenetica(unsigned int posicion);
 };
 
 /*
@@ -104,6 +105,10 @@ unsigned int Celda::getColumna(){
   return this->columna;
 }
 
+/*
+  pre: -
+  pos: devuelve true si la celda es nula
+*/
 bool Celda::estaVacia(){
   return this == NULL;
 }
@@ -113,6 +118,16 @@ bool Celda::celulaViva(){
 }
 bool Celda::celulaMuerta(){
   return this->celula->celulaMuerta();
+}
+
+/*
+  pre: posicion tiene que ser mayor a 0 y menor a la cantidad de genes que tenga la celula
+*/
+unsigned int Celda::getCargaGenetica(unsigned int posicion){
+  if( posicion <= 0 || posicion > this->celula->getCantidadGenes())
+    throw "Posicion invalida";
+
+  return this->celula->getCargaGenetica(posicion);
 }
 
 #endif // CELDA_H_

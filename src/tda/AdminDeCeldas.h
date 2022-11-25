@@ -26,9 +26,9 @@ class AdminDeCeldas {
   pos: Inicializa los atributos con valores default
 */
 AdminDeCeldas::AdminDeCeldas(){
-  this->X1 = 10;
-  this->X2 = 5;
-  this->X3 = 15;
+  this->X1 = 4;
+  this->X2 = 4;
+  this->X3 = 10;
 }
 
 
@@ -65,8 +65,8 @@ unsigned int AdminDeCeldas::contarVivas(Lista<Celda *> * celdas){
   celdas->iniciarCursor();
   while(celdas->avanzarCursor()){
     Celda * celda = celdas->obtenerCursor();
-    if(celda->getEstadoCelula() == Marcada){
-      cout << "#" << celda->getNivel() << ", " << celda->getFila() << ", " << celda->getColumna() << "#" << endl;
+    if(celda->getEstadoCelula() == Viva){
+      // cout << "#" << celda->getNivel() << ", " << celda->getFila() << ", " << celda->getColumna() << "#" << endl;
       celdasVivas++;
     }
   }
@@ -75,12 +75,28 @@ unsigned int AdminDeCeldas::contarVivas(Lista<Celda *> * celdas){
 }
 
 /*
-  pre:
-  pos:
+  pre: la lista de celdas vecinas no puede estar vacia y tampoco la celda
+  pos: actualiza la celula futura de la celda y sus genes
 */
 void AdminDeCeldas::actualizarCelda(Celda * celda, Lista<Celda *> * celdasVecinas){
-  
-}
+  unsigned int vivas = contarVivas(celdasVecinas);
 
+  if(celda->estaVacia()){
+    throw "La celda esta vacia";
+  }
+
+  // Una célula muerta con exactamente X1 células vecinas vivas "nace"
+  if(celda->celulaMuerta() && vivas == this->X1){
+    celda->revivirCelula(true);
+    // calcular genes
+  }
+  // Una célula viva con X2 a X3 células vecinas vivas sigue viva, en otro caso muere o permanece muerta
+  else if(celda->celulaViva() && (vivas < this->X2 || vivas > this->X3)){
+    celda->matarCelula(true);
+    // calcular genes
+  }
+
+  return;
+}
 
 #endif //ADMIN_DE_CELDAS_H_
