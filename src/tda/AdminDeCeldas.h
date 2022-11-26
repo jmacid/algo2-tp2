@@ -6,7 +6,6 @@ using namespace std;
 
 #include "Celda.h"
 #include "Lista.h"
-#include "Vector.h"
 #include "Gen.h"
 #include "Celula.h"
 
@@ -23,8 +22,6 @@ class AdminDeCeldas {
     unsigned int contarVivas(Lista<Celda *> * celdas);
     void actualizarCelda(Celda * celda, Lista<Celda *> * celdasVecinas);
 
-    void actualizarGenes(Celda * celda, bool futura, Vector<Gen *> * genes);
-
     void heredarGenes(Celda * celda, bool futura, Lista<Celda *> * celdas);
     unsigned int actualizarGen(unsigned int posicion, Lista<Celda *> * celdas);
     unsigned int generadorPorMaximo(unsigned int posicion, Lista<Celda *> * celdas);
@@ -40,7 +37,7 @@ class AdminDeCeldas {
 */
 AdminDeCeldas::AdminDeCeldas(){
   this->X1 = 4;
-  this->X2 = 4;
+  this->X2 = 6;
   this->X3 = 10;
 }
 
@@ -97,41 +94,19 @@ void AdminDeCeldas::actualizarCelda(Celda * celda, Lista<Celda *> * celdasVecina
   }
 
   unsigned int vivas = contarVivas(celdasVecinas);
-  Vector<Gen *> * genes = NULL;
 
-  // AdminDeGenes* adminDeGenes = new AdminDeGenes();
   // Una célula muerta con exactamente X1 células vecinas vivas "nace"
   if(celda->celulaMuerta() && vivas == this->X1){
     celda->revivirCelula(true);
-    // calcular genes
     this->heredarGenes(celda, true, celdasVecinas);
-
   }
   // Una célula viva con X2 a X3 células vecinas vivas sigue viva, en otro caso muere o permanece muerta
   else if(celda->celulaViva() && (vivas < this->X2 || vivas > this->X3)){
     celda->matarCelula(true);
-    // calcular genes
     this->heredarGenes(celda, true, celdasVecinas);
   }
 
   return;
-}
-
-/*
-  pre: el array de genes no puede estar vacio
-  pos: actualiza todos los genes de una celula de una celda
-*/
-void AdminDeCeldas::actualizarGenes(Celda * celda, bool futura, Vector<Gen *> * genes){
-
-  if(!genes || genes->getLongitud() == 0)
-    throw "Array de genes vacio";
-
-  for(int i = 0; i < genes->getLongitud(); i++){
-    Gen * gen = genes->obtener(i + 1);
-    unsigned int cargaGeneticaNueva =  gen->getCargaGentica();
-    celda->setCargaGenetica(futura, i, cargaGeneticaNueva);
-  }
-
 }
 
 /*

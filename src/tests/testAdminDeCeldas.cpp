@@ -52,14 +52,24 @@ int main (){
     adminDeCeldas->syncCelda(tablero->getCelda(2, 2, 2));
     adminDeCeldas->syncCelda(tablero->getCelda(3, 3, 3));
 
-
     cout << tablero->getCelda(1, 1, 1)->getCargaGenetica(false, 1) << endl;
     cout << tablero->getCelda(2, 2, 2)->getCargaGenetica(false, 1) << endl;
     cout << tablero->getCelda(3, 3, 3)->getCargaGenetica(false, 1) << endl;
 
+    // Otra pasada solo en 1 1 1
+    Lista<Celda *>* celdasVecinas1112 = new Lista<Celda *>();
+    tablero->getCeldasVecinas(celdasVecinas1112, 1, 1, 1);
+    unsigned int vivas1112 = adminDeCeldas->contarVivas(celdasVecinas1112);
+    adminDeCeldas->actualizarCelda(tablero->getCelda(1, 1, 1), celdasVecinas111);
+     cout << tablero->getCelda(1, 1, 1)->getCargaGenetica(false, 1) << endl;
+    adminDeCeldas->syncCelda(tablero->getCelda(1, 1, 1));
+    cout << tablero->getCelda(1, 1, 1)->getCargaGenetica(false, 1) << endl;
+
+
     delete celdasVecinas111;
     delete celdasVecinas222;
     delete celdasVecinas333;
+    delete celdasVecinas1112;
     delete adminDeCeldas;
     delete tablero;
 
