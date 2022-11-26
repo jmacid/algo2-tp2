@@ -9,6 +9,7 @@ using namespace std;
 #include "Lista.h"
 #include "Celda.h"
 #include "AdminDeCeldas.h"
+#include "BmpHandle.h"
 
 class Tablero {
 
@@ -36,6 +37,7 @@ class Tablero {
     void actualizarTablero(AdminDeCeldas* adminDeCeldas, unsigned int& nacimientos, unsigned int& fallecimientos);
     void syncTablero(AdminDeCeldas* adminDeCeldas, bool destinoFutura);
     void imprimirTablero();
+    void imprimirImagenDelTablero();
 };
 
 Tablero::Tablero(unsigned int planos, unsigned int filas, unsigned int columnas){
@@ -298,6 +300,41 @@ void Tablero::imprimirTablero(){
       cout << endl;
     }
     cout << endl;
+  }
+}
+
+/*
+  pre: -
+  pos: imprime una imagen de cada nivel del tablero
+*/
+void Tablero::imprimirImagenDelTablero(){
+  this->tablero->iniciarCursor();
+  int plano = 0;
+  while(this->tablero->avanzarCursor()){
+    // Plano
+    plano++;
+    BmpHandle* bmpHandle = new BmpHandle(this->getCantidadFilas(), this->getCantidadColumnas());
+    bmpHandle->iniciar();
+    string nombreArchivo = "Plano " + to_string(plano);
+
+    Lista<Lista<Celda *> *> * tempPlano = this->tablero->obtenerCursor();
+    tempPlano->iniciarCursor();
+    while(tempPlano->avanzarCursor()){
+      // Fila
+      Lista<Celda *> * tempFila = tempPlano->obtenerCursor();
+      tempFila->iniciarCursor();
+      while(tempFila->avanzarCursor()){
+        // Columna
+        Celda * celda = tempFila->obtenerCursor();
+        unsigned char gen1 = celda->getCargaGenetica(false, 1);
+        unsigned char gen2 = celda->getCargaGenetica(false, 2);
+        unsigned char gen3 = celda->getCargaGenetica(false, 3);
+        bmpHandle->imprimirCuadradito(celda->getFila() - 1, celda->getColumna() - 1, gen1, gen2, gen3);
+        //
+      }
+    }
+    bmpHandle->finalizar(nombreArchivo);
+    delete bmpHandle;
   }
 }
 

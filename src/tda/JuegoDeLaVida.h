@@ -5,6 +5,7 @@
 
 #include "Tablero.h"
 #include "../tda/AdminDeCeldas.h"
+#include "BmpHandle.h"
 
 class JuegoDeLaVida{
   private:
@@ -36,6 +37,8 @@ class JuegoDeLaVida{
     void imprimirStats();
 
     bool estaCongelado();
+
+    void imprimirImagenDelTablero();
 };
 
 
@@ -193,6 +196,14 @@ void JuegoDeLaVida::imprimirStats(){
 */
 bool JuegoDeLaVida::estaCongelado(){
   return this->cantidadNacimientosTurno == 0 && this->cantidadFallecimientosTurno == 0;
+}
+
+/*
+  pre: -
+  pos: imprime una imagen de cada nivel del tablero
+*/
+void JuegoDeLaVida::imprimirImagenDelTablero(){
+  this->tablero->imprimirImagenDelTablero();
 }
 
 

@@ -17,34 +17,37 @@ int main (){
     juegoDeLaVida->imprimirStats();
 
     juegoDeLaVida->imprimirTablero();
+
+    cout << "Imprimiendo...." << endl;
+    juegoDeLaVida->imprimirImagenDelTablero();
     
-    // Turno 2
-    juegoDeLaVida->pasarTurno();
+    // // Turno 2
+    // juegoDeLaVida->pasarTurno();
 
-    juegoDeLaVida->imprimirStats();
+    // juegoDeLaVida->imprimirStats();
 
-    juegoDeLaVida->imprimirTablero();
+    // juegoDeLaVida->imprimirTablero();
 
-    // Turno 3
-    juegoDeLaVida->pasarTurno();
+    // // Turno 3
+    // juegoDeLaVida->pasarTurno();
 
-    juegoDeLaVida->imprimirStats();
+    // juegoDeLaVida->imprimirStats();
 
-    juegoDeLaVida->imprimirTablero();
+    // juegoDeLaVida->imprimirTablero();
 
-    // Turno 4
-    juegoDeLaVida->pasarTurno();
+    // // Turno 4
+    // juegoDeLaVida->pasarTurno();
 
-    juegoDeLaVida->imprimirStats();
+    // juegoDeLaVida->imprimirStats();
 
-    juegoDeLaVida->imprimirTablero();
+    // juegoDeLaVida->imprimirTablero();
     
-    // Turno 5
-    juegoDeLaVida->pasarTurno();
+    // // Turno 5
+    // juegoDeLaVida->pasarTurno();
 
-    juegoDeLaVida->imprimirStats();
+    // juegoDeLaVida->imprimirStats();
 
-    juegoDeLaVida->imprimirTablero();
+    // juegoDeLaVida->imprimirTablero();
     
     delete juegoDeLaVida;
 
