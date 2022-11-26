@@ -14,8 +14,8 @@ class AdminDeCeldas {
     unsigned int X2;
     unsigned int X3;
 
-    void complementarCelda(Celda* celda);
-    void copiarCelda(Celda* celda);
+    void complementarCelda(Celda* celda, unsigned int& nacimientos, unsigned int& fallecimientos);
+    void copiarCelda(Celda* celda, unsigned int& nacimientos, unsigned int& fallecimientos);
 
   public:
     AdminDeCeldas();
@@ -23,7 +23,7 @@ class AdminDeCeldas {
     ~AdminDeCeldas();
     bool estaVacio();
     unsigned int contarVivas(Lista<Celda *> * celdas);
-    void actualizarCelda(Celda * celda, Lista<Celda *> * celdasVecinas);
+    void actualizarCelda(Celda * celda, Lista<Celda *> * celdasVecinas, unsigned int& nacimientos, unsigned int& fallecimientos);
 
     void heredarGenes(Celda * celda, bool futura, Lista<Celda *> * celdas);
     unsigned int actualizarGen(unsigned int posicion, Lista<Celda *> * celdas);
@@ -41,7 +41,7 @@ class AdminDeCeldas {
 AdminDeCeldas::AdminDeCeldas(){
   this->X1 = 4;
   this->X2 = 3;
-  this->X3 = 10;
+  this->X3 = 9;
 }
 
 
@@ -99,7 +99,7 @@ unsigned int AdminDeCeldas::contarVivas(Lista<Celda *> * celdas){
   pre: la lista de celdas vecinas no puede estar vacia y tampoco la celda
   pos: actualiza la celula futura de la celda y sus genes
 */
-void AdminDeCeldas::actualizarCelda(Celda * celda, Lista<Celda *> * celdasVecinas){
+void AdminDeCeldas::actualizarCelda(Celda * celda, Lista<Celda *> * celdasVecinas, unsigned int& nacimientos, unsigned int& fallecimientos){
   if(celda->estaVacia()){
     throw "La celda esta vacia";
   }
@@ -109,12 +109,16 @@ void AdminDeCeldas::actualizarCelda(Celda * celda, Lista<Celda *> * celdasVecina
   // Una célula muerta con exactamente X1 células vecinas vivas "nace"
   if(celda->celulaMuerta() && vivas == this->X1){
     celda->revivirCelula(true);
+    // cout << "v(" << celda->getPlano() << ", " << celda->getFila() << ", " << celda->getColumna() << ")" << endl;
+    nacimientos++;
     this->heredarGenes(celda, true, celdasVecinas);
   }
   // Una célula viva con X2 a X3 células vecinas vivas sigue viva, en otro caso muere o permanece muerta
   else if(celda->celulaViva() && (vivas < this->X2 || vivas > this->X3)){
     celda->matarCelula(true);
-    this->heredarGenes(celda, true, celdasVecinas);
+    // cout << "m(" << celda->getPlano() << ", " << celda->getFila() << ", " << celda->getColumna() << ")" << endl;
+    fallecimientos++;
+    // this->heredarGenes(celda, true, celdasVecinas);
   }
   else if (celda->celulaViva() && celda->getComportamiento() == Decay){
     for(int i = 0; i < celda->getCantidadGenes(); i++){
@@ -122,10 +126,10 @@ void AdminDeCeldas::actualizarCelda(Celda * celda, Lista<Celda *> * celdasVecina
     }
   }
   else if(celda->esComplementaria()){
-    complementarCelda(celda);
+    complementarCelda(celda, nacimientos, fallecimientos);
   }
   else if(celda->esPortal()){
-    copiarCelda(celda);
+    copiarCelda(celda, nacimientos, fallecimientos);
   }
 
   // La celda Zombie no muere y sus genes son 0
@@ -271,12 +275,14 @@ void AdminDeCeldas::syncCelda(Celda *celda, bool destinoFutura){
   }
 }
 
-void AdminDeCeldas::complementarCelda(Celda* celda){
+void AdminDeCeldas::complementarCelda(Celda* celda, unsigned int& nacimientos, unsigned int& fallecimientos){
   if(celda->getEstadoCelulaAuxiliar(true) == Viva){
     celda->matarCelula(true);
+    fallecimientos++;
   }
   else{
     celda->revivirCelula(true);
+    nacimientos++;
   }
 
   for(int i = 0; i < celda->getCantidadGenes(); i ++){
@@ -286,12 +292,14 @@ void AdminDeCeldas::complementarCelda(Celda* celda){
   }
 }
 
-void AdminDeCeldas::copiarCelda(Celda* celda){
+void AdminDeCeldas::copiarCelda(Celda* celda, unsigned int& nacimientos, unsigned int& fallecimientos){
   if(celda->getEstadoCelulaAuxiliar(true) == Viva){
     celda->revivirCelula(true);
+    nacimientos++;
   }
   else{
     celda->matarCelula(true);
+    fallecimientos++;
   }
 
   for(int i = 0; i < celda->getCantidadGenes(); i ++){

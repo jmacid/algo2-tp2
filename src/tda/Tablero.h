@@ -33,7 +33,7 @@ class Tablero {
     unsigned int calcularColumnaCircular(unsigned int columna, int incremento);
     unsigned int calcularFilaCircular(unsigned int fila, int incremento);
 
-    void actualizarTablero(AdminDeCeldas* adminDeCeldas);
+    void actualizarTablero(AdminDeCeldas* adminDeCeldas, unsigned int& nacimientos, unsigned int& fallecimientos);
     void syncTablero(AdminDeCeldas* adminDeCeldas, bool destinoFutura);
     void imprimirTablero();
 };
@@ -217,7 +217,7 @@ unsigned int Tablero::calcularColumnaCircular(unsigned int columna, int incremen
   pre: adminDeCeldas no debe estar vacio
   pos: recorre todo el tablero actualizando cada celda
 */
-void Tablero::actualizarTablero(AdminDeCeldas* adminDeCeldas){
+void Tablero::actualizarTablero(AdminDeCeldas* adminDeCeldas, unsigned int& nacimientos, unsigned int& fallecimientos){
   if(adminDeCeldas->estaVacio())
     throw "adminDeCeldas no puede estar vacio";
 
@@ -236,11 +236,12 @@ void Tablero::actualizarTablero(AdminDeCeldas* adminDeCeldas){
         // cout << "Actualizando: " << celda->getPlano() << ", " << celda->getFila() << ", " << celda->getColumna() << endl;
         Lista<Celda *>* celdasVecinas = new Lista<Celda *>();
         this->getCeldasVecinas(celdasVecinas, celda->getPlano(), celda->getFila(), celda->getColumna());
-        adminDeCeldas->actualizarCelda(celda, celdasVecinas);
+        adminDeCeldas->actualizarCelda(celda, celdasVecinas, nacimientos, fallecimientos);
         delete celdasVecinas;
       }
     }
   }
+
 }
 
 /*

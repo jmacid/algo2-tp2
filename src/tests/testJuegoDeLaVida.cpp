@@ -11,11 +11,38 @@ int main (){
 
     juegoDeLaVida->iniciarTableroConTemplate();
 
+    // Turno 1
     juegoDeLaVida->pasarTurno();
+
+    juegoDeLaVida->imprimirStats();
+
+    juegoDeLaVida->imprimirTablero();
+    
+    // Turno 2
+    juegoDeLaVida->pasarTurno();
+
+    juegoDeLaVida->imprimirStats();
 
     juegoDeLaVida->imprimirTablero();
 
+    // Turno 3
     juegoDeLaVida->pasarTurno();
+
+    juegoDeLaVida->imprimirStats();
+
+    juegoDeLaVida->imprimirTablero();
+
+    // Turno 4
+    juegoDeLaVida->pasarTurno();
+
+    juegoDeLaVida->imprimirStats();
+
+    juegoDeLaVida->imprimirTablero();
+    
+    // Turno 5
+    juegoDeLaVida->pasarTurno();
+
+    juegoDeLaVida->imprimirStats();
 
     juegoDeLaVida->imprimirTablero();
     

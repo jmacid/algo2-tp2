@@ -1,6 +1,8 @@
 #ifndef JUEGO_DE_LA_VIDA_H_
 #define JUEGO_DE_LA_VIDA_H_
 
+#include <iostream>
+
 #include "Tablero.h"
 #include "../tda/AdminDeCeldas.h"
 
@@ -10,9 +12,9 @@ class JuegoDeLaVida{
     AdminDeCeldas * adminDeCeldas;
     unsigned int cantidadVivas;
     unsigned int cantidadNacimientosTurno;
-    unsigned int cantidadDefuncionesTurno;
+    unsigned int cantidadFallecimientosTurno;
     unsigned int cantidadNacimientosTotales;
-    unsigned int cantidadDefuncionesTotales;
+    unsigned int cantidadFallecimientosTotales;
     unsigned int cantidadTurnos;
 
   public:
@@ -20,14 +22,20 @@ class JuegoDeLaVida{
     ~JuegoDeLaVida();
     unsigned int getCantidadVivas();
     unsigned int getCantidadNacimientosTurno();
-    unsigned int getCantidadDefuncionesTurno();
+    unsigned int getCantidadFallecimientosTurno();
     unsigned int getCantidadNacimientosTotales();
-    unsigned int getCantidadDefuncionesTotales();
+    unsigned int getCantidadFallecimientosTotales();
     unsigned int getCantidadTurnos();
 
     void iniciarTableroConTemplate();
     void pasarTurno();
     void imprimirTablero();
+
+    void resetNacimientosTurno();
+    void resetStatsTurno();
+    void imprimirStats();
+
+    bool estaCongelado();
 };
 
 
@@ -40,9 +48,9 @@ JuegoDeLaVida::JuegoDeLaVida(int planos = 4, int filas = 3, int columnas = 5){
   this->adminDeCeldas = new AdminDeCeldas();
   this->cantidadVivas = 0;
   this->cantidadNacimientosTurno = 0;
-  this->cantidadDefuncionesTurno = 0;
+  this->cantidadFallecimientosTurno = 0;
   this->cantidadNacimientosTotales = 0;
-  this->cantidadDefuncionesTotales = 0;
+  this->cantidadFallecimientosTotales = 0;
   this->cantidadTurnos = 0;
 }
 
@@ -74,10 +82,10 @@ unsigned int JuegoDeLaVida::getCantidadNacimientosTurno(){
 }
 /*
   pre: -
-  pos: retorna la cantidad de defunciones en el turno
+  pos: retorna la cantidad de Fallecimientos en el turno
 */
-unsigned int JuegoDeLaVida::getCantidadDefuncionesTurno(){
-  return this->cantidadDefuncionesTotales;
+unsigned int JuegoDeLaVida::getCantidadFallecimientosTurno(){
+  return this->cantidadFallecimientosTurno;
 }
 /*
   pre: -
@@ -88,10 +96,10 @@ unsigned int JuegoDeLaVida::getCantidadNacimientosTotales(){
 }
 /*
   pre: -
-  pos: retorna la cantidad de defunciones totales
+  pos: retorna la cantidad de Fallecimientos totales
 */
-unsigned int JuegoDeLaVida::getCantidadDefuncionesTotales(){
-  return this->cantidadDefuncionesTotales;
+unsigned int JuegoDeLaVida::getCantidadFallecimientosTotales(){
+  return this->cantidadFallecimientosTotales;
 }
 /*
   pre: -
@@ -117,6 +125,8 @@ void JuegoDeLaVida::iniciarTableroConTemplate(){
   // this->tablero->getCelda(1, 1, 1)->setPortal(this->tablero->getCelda(2, 2, 2));
 
   this->tablero->syncTablero(this->adminDeCeldas, true);
+
+  this->cantidadVivas = 6;
 }
 
 /*
@@ -125,8 +135,14 @@ void JuegoDeLaVida::iniciarTableroConTemplate(){
 */
 void JuegoDeLaVida::pasarTurno(){  
 
-  this->tablero->actualizarTablero(this->adminDeCeldas);
+  this->resetStatsTurno();
+
+  this->tablero->actualizarTablero(this->adminDeCeldas, this->cantidadNacimientosTurno, this->cantidadFallecimientosTurno);
   this->tablero->syncTablero(this->adminDeCeldas, false);
+
+  this->cantidadVivas += this->cantidadNacimientosTurno - this->cantidadFallecimientosTurno;
+  this->cantidadNacimientosTotales += this->cantidadNacimientosTurno;
+  this->cantidadFallecimientosTotales += this->cantidadFallecimientosTurno;
   
   this->cantidadTurnos++;
 
@@ -139,5 +155,46 @@ void JuegoDeLaVida::pasarTurno(){
 void JuegoDeLaVida::imprimirTablero(){
   this->tablero->imprimirTablero();
 }
+
+/*
+  pre: -
+  pos: pone a cantidadNacimientosTurno en 0
+*/
+void JuegoDeLaVida::resetNacimientosTurno(){
+  this->cantidadNacimientosTurno = 0;
+}
+
+/*
+  pre: -
+  pos: pone a los contadores por turno en cero
+*/
+void JuegoDeLaVida::resetStatsTurno(){
+  this->cantidadNacimientosTurno = 0;
+  this->cantidadFallecimientosTurno = 0;
+}
+
+/*
+  pre: -
+  pos: imprime las estadisticas
+*/
+void JuegoDeLaVida::imprimirStats(){
+  char congelado = this->estaCongelado() == 1 ? 'S' : 'N';
+  cout << "Celulas vivas: " << this->getCantidadVivas() << endl;
+  cout << "Nacimientos turno: " << this->getCantidadNacimientosTurno() << endl;
+  cout << "Fallecimientos turno: " << this->getCantidadFallecimientosTurno() << endl;
+  cout << "Nacimientos TOTALES: " << this->getCantidadNacimientosTotales() << endl;
+  cout << "Fallecimientos TOTALES: " << this->getCantidadFallecimientosTotales() << endl;
+  cout << "Juego congelado: " << congelado << endl;
+}
+
+/*
+  pre: -
+  pos: retorna true si el juego no ha sufrido ni nacimientos ni fallecimientos en el ultimo turno
+*/
+bool JuegoDeLaVida::estaCongelado(){
+  return this->cantidadNacimientosTurno == 0 && this->cantidadFallecimientosTurno == 0;
+}
+
+
 
 #endif // JUEGO_DE_LA_VIDA_H_
