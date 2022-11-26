@@ -15,6 +15,9 @@ int main (){
 
     juegoDeLaVida->imprimirTablero();
 
+    juegoDeLaVida->pasarTurno();
+
+    juegoDeLaVida->imprimirTablero();
     
     delete juegoDeLaVida;
 

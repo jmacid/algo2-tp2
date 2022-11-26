@@ -48,9 +48,9 @@ int main (){
     cout << tablero->getCelda(2, 2, 2)->getCargaGenetica(false, 1) << endl;
     cout << tablero->getCelda(3, 3, 3)->getCargaGenetica(false, 1) << endl;
     // sync
-    adminDeCeldas->syncCelda(tablero->getCelda(1, 1, 1));
-    adminDeCeldas->syncCelda(tablero->getCelda(2, 2, 2));
-    adminDeCeldas->syncCelda(tablero->getCelda(3, 3, 3));
+    adminDeCeldas->syncCelda(tablero->getCelda(1, 1, 1), false);
+    adminDeCeldas->syncCelda(tablero->getCelda(2, 2, 2), false);
+    adminDeCeldas->syncCelda(tablero->getCelda(3, 3, 3), false);
 
     cout << tablero->getCelda(1, 1, 1)->getCargaGenetica(false, 1) << endl;
     cout << tablero->getCelda(2, 2, 2)->getCargaGenetica(false, 1) << endl;
@@ -62,7 +62,7 @@ int main (){
     unsigned int vivas1112 = adminDeCeldas->contarVivas(celdasVecinas1112);
     adminDeCeldas->actualizarCelda(tablero->getCelda(1, 1, 1), celdasVecinas111);
      cout << tablero->getCelda(1, 1, 1)->getCargaGenetica(false, 1) << endl;
-    adminDeCeldas->syncCelda(tablero->getCelda(1, 1, 1));
+    adminDeCeldas->syncCelda(tablero->getCelda(1, 1, 1), false);
     cout << tablero->getCelda(1, 1, 1)->getCargaGenetica(false, 1) << endl;
 
 

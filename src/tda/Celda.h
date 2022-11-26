@@ -7,15 +7,16 @@ enum Comportamiento {
   Inerte,
   Zombie,
   Decay,
-  FALTA_UNO,
-  Radioactiva,
-  Portal
+  Complementaria,
+  Portal,
+  Radioactiva
 };
 
 class Celda {
   private:
     Celula * celula;
     Celula * celulaFutura;
+    Celda * celdaAuxiliar;
     Comportamiento comportamiento;
     unsigned int plano;
     unsigned int fila;
@@ -26,6 +27,7 @@ class Celda {
     Celda(unsigned int plano, unsigned int fila, unsigned int columna);
     ~Celda();
     EstadoCelula getEstadoCelula(bool futura);
+    Comportamiento getComportamiento();
     void revivirCelula(bool futura);
     void matarCelula(bool futura);
     unsigned int getPlano();
@@ -37,6 +39,23 @@ class Celda {
     unsigned int getCargaGenetica(bool futura, unsigned int posicion);
     void setCargaGenetica(bool futura, unsigned int posicion, unsigned int cargaGenetica);
     unsigned int getCantidadGenes();
+    void syncActualyFutura();
+
+    void setZombie();
+    void setDecay();
+    void setComplemento(Celda * celdaComplementaria);
+    void setPortal(Celda * celdaOrigen);
+    void setRadioactiva();
+
+    EstadoCelula getEstadoCelulaAuxiliar(bool futura);
+    unsigned int getCargaGeneticaAuxiliar(bool futura, unsigned int posicion);
+    unsigned int getCargaMaximaGenetica(bool futura);
+
+    bool esZombie();
+    bool esDecay();
+    bool esComplementaria();
+    bool esPortal();
+    bool esRadioactiva();
 };
 
 /*
@@ -46,6 +65,7 @@ class Celda {
 Celda::Celda(unsigned int plano, unsigned int fila, unsigned int columna){
   this->celula = new Celula();
   this->celulaFutura = new Celula();
+  this->celdaAuxiliar = NULL;
   this->comportamiento = Inerte;
   this->plano = plano;
   this->fila = fila;
@@ -54,11 +74,16 @@ Celda::Celda(unsigned int plano, unsigned int fila, unsigned int columna){
 
 /*
   pre: -
-  pos: destruye el objeto liberando la memoria solicitada
+  pos: destruye el objeto liberando la memoria solicitada y los apunta a NULL
 */
 Celda::~Celda(){
   delete this->celula;
   delete this->celulaFutura;
+  delete this->celdaAuxiliar;
+
+  this->celula = NULL;
+  this->celulaFutura = NULL;
+  this->celdaAuxiliar = NULL;
 }
 
 /*
@@ -72,6 +97,14 @@ EstadoCelula Celda::getEstadoCelula(bool futura){
   else{
     return this->celula->getEstado();
   }
+}
+
+/*
+  pre: -
+  pos: devuelve el comportamiento de la celda
+*/
+Comportamiento Celda::getComportamiento(){
+  return this->comportamiento;
 }
 
 /*
@@ -160,6 +193,120 @@ void Celda::setCargaGenetica(bool futura, unsigned int posicion, unsigned int ca
 
 unsigned int Celda::getCantidadGenes(){
   return this->celula->getCantidadGenes();
+}
+
+/*
+  pre: -
+  pos: cambia el comportamiento a Zombie
+*/
+void Celda::setZombie(){
+  this->comportamiento = Zombie;
+}
+
+/*
+  pre: -
+  pos: cambia el comportamiento a Decay
+*/
+void Celda::setDecay(){
+  this->comportamiento = Decay;
+}
+
+/*
+  pre: -
+  pos: cambia el comportamiento a Complementaria y apunta la celula complementaria
+*/
+void Celda::setComplemento(Celda * celdaComplementaria){
+  this->comportamiento = Complementaria;
+  this->celdaAuxiliar = celdaComplementaria;
+}
+
+/*
+  pre: -
+  pos: cambia el comportamiento a Portal y apunta a la celda origen del portal
+*/
+void Celda::setPortal(Celda * celdaOrigen){
+  this->comportamiento = Portal;
+  this->celdaAuxiliar = celdaOrigen;
+}
+
+/*
+  pre: -
+  pos: cambia el comportamiento a Radioactiva
+*/
+void Celda::setRadioactiva(){
+  this->comportamiento = Radioactiva;
+}
+
+/*
+  pre: -
+  pos: retorna el estado de la celula dentro de la celda auxiliar
+*/
+EstadoCelula Celda::getEstadoCelulaAuxiliar(bool futura){
+    return this->celdaAuxiliar->getEstadoCelula(futura);
+}
+
+/*
+  pre: posicion tiene que ser mayor a 0 y menor a la cantidad de genes que tenga la celula
+  pos: devuelve la carga genetica de la posicion solicitada
+*/
+unsigned int Celda::getCargaGeneticaAuxiliar(bool futura, unsigned int posicion){
+  if( posicion <= 0 || posicion > this->celula->getCantidadGenes())
+    throw "Posicion invalida";
+
+  return this->celdaAuxiliar->getCargaGenetica(futura, posicion);
+}
+
+/*
+  pre:-
+  pos: retorna la carga genetica maxima del primer gen que encuentre
+*/
+unsigned int Celda::getCargaMaximaGenetica(bool futura){
+  if(futura){
+    return this->celulaFutura->getCargaMaximaGenetica();
+  }
+  else{
+    return this->celula->getCargaMaximaGenetica();
+  }
+}
+
+/*
+  pre: -
+  pos: retorna true si la celda elegida es Zombie
+*/
+bool Celda::esZombie(){
+  return this->getComportamiento() == Zombie;
+}
+
+/*
+  pre: -
+  pos: retorna true si la celda elegida es Decay
+*/
+bool Celda::esDecay(){
+  return this->getComportamiento() == Decay;
+}
+
+/*
+  pre: -
+  pos: retorna true si la celda elegida es Complementaria
+*/
+bool Celda::esComplementaria(){
+  return this->getComportamiento() == Complementaria;
+}
+
+/*
+  pre: -
+  pos: retorna true si la celda elegida es Portal
+*/
+bool Celda::esPortal(){
+  return this->getComportamiento() == Portal;
+}
+
+/*
+  pre: -
+  pos: retorna true si la celda elegida es Radioactiva
+*/
+bool Celda::esRadioactiva(){
+  return this->getComportamiento() == Radioactiva;
 }
 
 #endif // CELDA_H_

@@ -6,7 +6,6 @@ using namespace std;
 
 #include "Celda.h"
 #include "Lista.h"
-#include "Gen.h"
 #include "Celula.h"
 
 class AdminDeCeldas {
@@ -14,6 +13,9 @@ class AdminDeCeldas {
     unsigned int X1;
     unsigned int X2;
     unsigned int X3;
+
+    void complementarCelda(Celda* celda);
+    void copiarCelda(Celda* celda);
 
   public:
     AdminDeCeldas();
@@ -29,7 +31,7 @@ class AdminDeCeldas {
     unsigned int generadorPorMinimo(unsigned int posicion, Lista<Celda *> * celdas);
     unsigned int generadorPromedio(unsigned int posicion, Lista<Celda *> * celdas);
 
-    void syncCelda(Celda *celda);
+    void syncCelda(Celda *celda, bool destinoFutura);
 };
 
 /*
@@ -38,7 +40,7 @@ class AdminDeCeldas {
 */
 AdminDeCeldas::AdminDeCeldas(){
   this->X1 = 4;
-  this->X2 = 6;
+  this->X2 = 3;
   this->X3 = 10;
 }
 
@@ -114,6 +116,25 @@ void AdminDeCeldas::actualizarCelda(Celda * celda, Lista<Celda *> * celdasVecina
     celda->matarCelula(true);
     this->heredarGenes(celda, true, celdasVecinas);
   }
+  else if (celda->celulaViva() && celda->getComportamiento() == Decay){
+    for(int i = 0; i < celda->getCantidadGenes(); i++){
+      celda->setCargaGenetica(true, i + 1, 300);
+    }
+  }
+  else if(celda->esComplementaria()){
+    complementarCelda(celda);
+  }
+  else if(celda->esPortal()){
+    copiarCelda(celda);
+  }
+
+  // La celda Zombie no muere y sus genes son 0
+  if(celda->esZombie()){
+    celda->revivirCelula(true);
+    for(int i = 0; i < celda->getCantidadGenes(); i++){
+      celda->setCargaGenetica(true, i + 1, 0);
+    }
+  }
 
   return;
 }
@@ -131,9 +152,9 @@ void AdminDeCeldas::heredarGenes(Celda * celda, bool futura, Lista<Celda *> * ce
 
   for(int i = 0; i < celda->getCantidadGenes(); i++){
     unsigned int nuevaCargaGenetica = this->actualizarGen(i + 1, celdas);
-    cout << "Antes: " << celda->getCargaGenetica(true, i+1) << endl;
+    // cout << "Antes: " << celda->getCargaGenetica(true, i+1) << endl;
     celda->setCargaGenetica(futura, i+1, nuevaCargaGenetica);
-    cout << "Despues: " << celda->getCargaGenetica(true, i + 1) << endl;
+    // cout << "Despues: " << celda->getCargaGenetica(true, i + 1) << endl;
   }
 }
 
@@ -172,6 +193,9 @@ unsigned int AdminDeCeldas::generadorPorMaximo(unsigned int posicion, Lista<Celd
   while(celdas->avanzarCursor()){
     Celda * celda = celdas->obtenerCursor();
     unsigned int valorGen = celda->getCargaGenetica(false, posicion);
+    if(celda->esRadioactiva()){
+      valorGen *= 1.05; // Sus genes se transmiten un 5% mas fuertes
+    }
     if(maximoGen < valorGen){
       maximoGen = valorGen;
     }
@@ -193,6 +217,9 @@ unsigned int AdminDeCeldas::generadorPorMinimo(unsigned int posicion, Lista<Celd
   while(celdas->avanzarCursor()){
     Celda * celda = celdas->obtenerCursor();
     unsigned int valorGen = celda->getCargaGenetica(false, posicion);
+    if(celda->esRadioactiva()){
+      valorGen *= 1.05; // Sus genes se transmiten un 5% mas fuertes
+    }
     if(minimoGen > valorGen){
       minimoGen = valorGen;
     }
@@ -212,7 +239,11 @@ unsigned int AdminDeCeldas::generadorPromedio(unsigned int posicion, Lista<Celda
   celdas->iniciarCursor();
   while(celdas->avanzarCursor()){
     Celda * celda = celdas->obtenerCursor();
-    suma += celda->getCargaGenetica(false, posicion);
+    unsigned int valorGen = celda->getCargaGenetica(false, posicion);
+    if(celda->esRadioactiva()){
+      valorGen *= 1.05; // Sus genes se transmiten un 5% mas fuertes
+    }
+    suma += valorGen;
     cantidad++;
   }
 
@@ -221,24 +252,51 @@ unsigned int AdminDeCeldas::generadorPromedio(unsigned int posicion, Lista<Celda
 
 /*
   pre: la celda no tiene que estar vacia
-  pos: copia los valores de la celda futura en la celda actual
+  pos: copia los valores de la celda futura en la celda actual o al reves
 */
-void AdminDeCeldas::syncCelda(Celda *celda){
+void AdminDeCeldas::syncCelda(Celda *celda, bool destinoFutura){
   if(celda->estaVacia())
     throw "La celda esta vacia";
 
-  if( celda->getEstadoCelula(true) == Viva){
-    celda->revivirCelula(false);
+  if( celda->getEstadoCelula(!destinoFutura) == Viva){
+    celda->revivirCelula(destinoFutura);
   }
   else{
-    celda->matarCelula(false);
+    celda->matarCelula(destinoFutura);
   }
 
   for(int i = 0; i < celda->getCantidadGenes(); i ++){
-    unsigned int cargaGeneticaFutura = celda->getCargaGenetica(true, i + 1);
-    celda->setCargaGenetica(false, i + 1, cargaGeneticaFutura);
+    unsigned int cargaGenetica = celda->getCargaGenetica(!destinoFutura, i + 1);
+    celda->setCargaGenetica(destinoFutura, i + 1, cargaGenetica);
   }
-
 }
 
+void AdminDeCeldas::complementarCelda(Celda* celda){
+  if(celda->getEstadoCelulaAuxiliar(true) == Viva){
+    celda->matarCelula(true);
+  }
+  else{
+    celda->revivirCelula(true);
+  }
+
+  for(int i = 0; i < celda->getCantidadGenes(); i ++){
+    unsigned int cargaMaximaGenetica = celda->getCargaMaximaGenetica(true);
+    unsigned int cargaGeneticaComplementaria = cargaMaximaGenetica - celda->getCargaGeneticaAuxiliar(true, i + 1);
+    celda->setCargaGenetica(true, i + 1, cargaGeneticaComplementaria);
+  }
+}
+
+void AdminDeCeldas::copiarCelda(Celda* celda){
+  if(celda->getEstadoCelulaAuxiliar(true) == Viva){
+    celda->revivirCelula(true);
+  }
+  else{
+    celda->matarCelula(true);
+  }
+
+  for(int i = 0; i < celda->getCantidadGenes(); i ++){
+    unsigned int cargaGeneticaComplementaria = celda->getCargaGeneticaAuxiliar(true, i + 1);
+    celda->setCargaGenetica(true, i + 1, cargaGeneticaComplementaria);
+  }
+}
 #endif //ADMIN_DE_CELDAS_H_

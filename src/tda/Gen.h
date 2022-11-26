@@ -51,12 +51,24 @@ unsigned int Gen::getCargaGentica(){
 }
 
 /*
-  pre: la carga genetica no puede ser mayor al maximo ni menor a cero
+  pre: la carga genetica no puede ser mayor al maximo ni menor a cero. Si lo hace, se le asinga el extremo correspondiente
   pos: asigna el valor de la carga genetica
 */
 void Gen::setCargaGentica(unsigned int cargaGenetica){
-  this->verificar(this->maximaCargaGenetica, cargaGenetica);
-  this->cargaGenetica = cargaGenetica;
+  unsigned int cargaGeneticaAux;
+  try {
+    this->verificar(this->maximaCargaGenetica, cargaGenetica);
+    cargaGeneticaAux = cargaGenetica;
+  }
+  catch(...){
+    if( cargaGenetica > this->maximaCargaGenetica){
+      cargaGeneticaAux = this->maximaCargaGenetica;
+    }
+    else{
+      cargaGeneticaAux = 0;
+    }
+  }
+  this->cargaGenetica = cargaGeneticaAux;
 }
 
 /*

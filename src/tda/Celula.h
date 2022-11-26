@@ -23,6 +23,7 @@ class Celula {
     ~Celula();
     EstadoCelula getEstado();
     unsigned int getCargaGenetica(unsigned int posicion);
+    unsigned int getCargaMaximaGenetica();
     int getCantidadGenes();
     void actualizarGen(unsigned int posicion, unsigned int cargaGenetica);
     void revivir();
@@ -74,9 +75,11 @@ Celula::~Celula() {
   for(int i = 0; i < longuitud; i++ ){
     Gen* gen = this->genes->obtener(i + 1);
     delete gen;
+    gen = NULL;
   }
 
   delete this->genes;
+  this->genes = NULL;
 }
 
 /*
@@ -111,6 +114,17 @@ unsigned int Celula::getCargaGenetica(unsigned int posicion){
   if( posicion < 0 || posicion > this->genes->getLongitud())
     throw "La posicion solicitada es incorrecta. Debe ser mayor a cero y menor a " + this->genes->getLongitud();
   return this->genes->obtener(posicion)->getCargaGentica();
+}
+
+/*
+  pre: -
+  pos: retorna la carga genetica maxima del primer gen encontrado, sino un 0
+*/
+unsigned int Celula::getCargaMaximaGenetica(){
+  for(int i = 0; i < this->genes->getLongitud(); i++){
+    return this->genes->obtener(i + 1)->getMaximoCargaGenetica();
+  }
+  return 0;
 }
 
 /*

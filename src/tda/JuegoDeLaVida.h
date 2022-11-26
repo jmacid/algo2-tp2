@@ -53,6 +53,8 @@ JuegoDeLaVida::JuegoDeLaVida(int planos = 4, int filas = 3, int columnas = 5){
 JuegoDeLaVida::~JuegoDeLaVida(){
   delete this->tablero;
   delete this->adminDeCeldas;
+  this->tablero = NULL;
+  this->adminDeCeldas = NULL;
 }
 
 
@@ -107,6 +109,14 @@ void JuegoDeLaVida::iniciarTableroConTemplate(){
   this->tablero->getCelda(4, 1, 2)->revivirCelula(false);
   this->tablero->getCelda(2, 2, 2)->matarCelula(false);
   this->tablero->getCelda(3, 3, 3)->revivirCelula(false);
+
+  // this->tablero->getCelda(1,1,1)->setZombie();
+
+  this->tablero->getCelda(1, 1, 1)->revivirCelula(false);
+  this->tablero->getCelda(2, 1, 1)->setRadioactiva();
+  // this->tablero->getCelda(1, 1, 1)->setPortal(this->tablero->getCelda(2, 2, 2));
+
+  this->tablero->syncTablero(this->adminDeCeldas, true);
 }
 
 /*
@@ -116,7 +126,7 @@ void JuegoDeLaVida::iniciarTableroConTemplate(){
 void JuegoDeLaVida::pasarTurno(){  
 
   this->tablero->actualizarTablero(this->adminDeCeldas);
-  this->tablero->syncTablero(this->adminDeCeldas);
+  this->tablero->syncTablero(this->adminDeCeldas, false);
   
   this->cantidadTurnos++;
 

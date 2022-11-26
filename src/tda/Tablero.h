@@ -34,7 +34,7 @@ class Tablero {
     unsigned int calcularFilaCircular(unsigned int fila, int incremento);
 
     void actualizarTablero(AdminDeCeldas* adminDeCeldas);
-    void syncTablero(AdminDeCeldas* adminDeCeldas);
+    void syncTablero(AdminDeCeldas* adminDeCeldas, bool destinoFutura);
     void imprimirTablero();
 };
 
@@ -79,15 +79,19 @@ Tablero::~Tablero(){
       while(tempFila->avanzarCursor()){
         Celda * celda = tempFila->obtenerCursor();
         delete celda;
+        celda = NULL;
       }
 
       delete tempFila;
+      tempFila = NULL;
     }
 
     delete tempPlano;
+    tempPlano = NULL;
   }
 
   delete this->tablero;
+  this->tablero = NULL;
 }
 
 
@@ -152,7 +156,7 @@ void Tablero::getCeldasColumnaVecinas(Lista<Celda *>* celdasVecinas, Lista<Celda
     if( i == 0 && !incluirCentro) continue;
     unsigned int columnaActual = this->calcularColumnaCircular(columna, i);
     Celda * celda = columnaCeldas->obtener(columnaActual);
-    cout << "(" << celda->getPlano() << ", " << celda->getFila() << ", " << celda->getColumna() << ")" << endl;
+    // cout << "(" << celda->getPlano() << ", " << celda->getFila() << ", " << celda->getColumna() << ")" << endl;
     celdasVecinas->agregar(celda);
   }
 }
@@ -229,7 +233,7 @@ void Tablero::actualizarTablero(AdminDeCeldas* adminDeCeldas){
       while(tempFila->avanzarCursor()){
         // Columna
         Celda * celda = tempFila->obtenerCursor();
-        cout << "Actualizando: " << celda->getPlano() << ", " << celda->getFila() << ", " << celda->getColumna() << endl;
+        // cout << "Actualizando: " << celda->getPlano() << ", " << celda->getFila() << ", " << celda->getColumna() << endl;
         Lista<Celda *>* celdasVecinas = new Lista<Celda *>();
         this->getCeldasVecinas(celdasVecinas, celda->getPlano(), celda->getFila(), celda->getColumna());
         adminDeCeldas->actualizarCelda(celda, celdasVecinas);
@@ -241,9 +245,9 @@ void Tablero::actualizarTablero(AdminDeCeldas* adminDeCeldas){
 
 /*
   pre: adminDeCeldas no debe estar vacio
-  pos: recorre todo el tablero sincronizando cada celda
+  pos: recorre todo el tablero sincronizando cada celda futura con la actual o al reves
 */
-void Tablero::syncTablero(AdminDeCeldas* adminDeCeldas){
+void Tablero::syncTablero(AdminDeCeldas* adminDeCeldas, bool destinoFutura){
   if(adminDeCeldas->estaVacio())
     throw "adminDeCeldas no puede estar vacio";
 
@@ -259,8 +263,8 @@ void Tablero::syncTablero(AdminDeCeldas* adminDeCeldas){
       while(tempFila->avanzarCursor()){
         // Columna
         Celda * celda = tempFila->obtenerCursor();
-        cout << "Sincronizando: " << celda->getPlano() << ", " << celda->getFila() << ", " << celda->getColumna() << endl;
-        adminDeCeldas->syncCelda(celda);
+        // cout << "Sincronizando: " << celda->getPlano() << ", " << celda->getFila() << ", " << celda->getColumna() << endl;
+        adminDeCeldas->syncCelda(celda, destinoFutura);
       }
     }
   }
