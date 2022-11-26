@@ -25,7 +25,7 @@ class Celda {
   public:
     Celda(unsigned int nivel, unsigned int fila, unsigned int columna);
     ~Celda();
-    EstadoCelula getEstadoCelula();
+    EstadoCelula getEstadoCelula(bool futura);
     void revivirCelula(bool futura);
     void matarCelula(bool futura);
     unsigned int getNivel();
@@ -34,7 +34,9 @@ class Celda {
     bool estaVacia();
     bool celulaViva();
     bool celulaMuerta();
-    unsigned int getCargaGenetica(unsigned int posicion);
+    unsigned int getCargaGenetica(bool futura, unsigned int posicion);
+    void setCargaGenetica(bool futura, unsigned int posicion, unsigned int cargaGenetica);
+    unsigned int getCantidadGenes();
 };
 
 /*
@@ -63,8 +65,13 @@ Celda::~Celda(){
   pre: -
   pos: devuelve el estado de la celula actual
 */
-EstadoCelula Celda::getEstadoCelula(){
-  return this->celula->getEstado();
+EstadoCelula Celda::getEstadoCelula(bool futura){
+  if(futura){
+    return this->celulaFutura->getEstado();
+  }
+  else{
+    return this->celula->getEstado();
+  }
 }
 
 /*
@@ -122,12 +129,37 @@ bool Celda::celulaMuerta(){
 
 /*
   pre: posicion tiene que ser mayor a 0 y menor a la cantidad de genes que tenga la celula
+  pos: devuelve la carga genetica de la posicion solicitada
 */
-unsigned int Celda::getCargaGenetica(unsigned int posicion){
+unsigned int Celda::getCargaGenetica(bool futura, unsigned int posicion){
   if( posicion <= 0 || posicion > this->celula->getCantidadGenes())
     throw "Posicion invalida";
 
-  return this->celula->getCargaGenetica(posicion);
+  if(futura){
+    return this->celulaFutura->getCargaGenetica(posicion);
+  }
+  else{
+    return this->celula->getCargaGenetica(posicion);
+  }
+}
+
+/*
+  pre: posicion tiene que ser mayor a 0 y menor a la cantidad de genes que tenga la celula
+*/
+void Celda::setCargaGenetica(bool futura, unsigned int posicion, unsigned int cargaGenetica){
+  if( posicion <= 0 || posicion > this->celula->getCantidadGenes())
+    throw "Posicion invalida";
+
+  if(futura){
+    this->celulaFutura->actualizarGen(posicion, cargaGenetica);
+  }
+  else{
+    this->celula->actualizarGen(posicion, cargaGenetica);
+  }
+}
+
+unsigned int Celda::getCantidadGenes(){
+  return this->celula->getCantidadGenes();
 }
 
 #endif // CELDA_H_

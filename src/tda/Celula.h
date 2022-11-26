@@ -6,6 +6,7 @@
 #include "Vector.h"
 #include "../constantes.h"
 
+
 enum EstadoCelula {
   Viva, 
   Muerta
@@ -34,7 +35,7 @@ class Celula {
 
 /*
   pre: -
-  pos: crea el objeto celula muerta con todos los genes en 0
+  pos: crea el objeto celula muerta y los genes en un numero aleatorio
 */
 Celula::Celula() {
   this->estado = Muerta;
@@ -42,13 +43,13 @@ Celula::Celula() {
 
   int longuitud = this->genes->getLongitud();
   for(int i = 0; i < longuitud; i++ ){
-    this->genes->agregar(i + 1, new Gen(maximaCargaGenetica, 0));
+    this->genes->agregar(i + 1, new Gen(maximaCargaGenetica));
   }
 }
 
 /*
   pre: la cantidad de genes no puede ser menos o igual a cero
-  pos: crea el objeto celula muerta con todos los genes en 0 
+  pos: crea el objeto celula muerta y los genes en un numero aleatorio
 */
 Celula::Celula(unsigned int cantidadGenes, unsigned int maximaCargaGenetica) {
   if(cantidadGenes <= 0)
@@ -59,7 +60,7 @@ Celula::Celula(unsigned int cantidadGenes, unsigned int maximaCargaGenetica) {
 
   int longuitud = this->genes->getLongitud();
   for(int i = 0; i < longuitud; i++ ){
-    this->genes->agregar(i + 1, new Gen(maximaCargaGenetica, 0));
+    this->genes->agregar(i + 1, new Gen(maximaCargaGenetica));
   }
 }
 

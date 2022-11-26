@@ -15,8 +15,8 @@ int main (){
 
     tablero->getCelda(1, 1, 1)->revivirCelula(false);
 
-    cout << tablero->getCelda(1, 1, 1)->getEstadoCelula() << endl;
-    cout << tablero->getCelda(2, 2, 2)->getEstadoCelula() << endl;
+    cout << tablero->getCelda(1, 1, 1)->getEstadoCelula(false) << endl;
+    cout << tablero->getCelda(2, 2, 2)->getEstadoCelula(false) << endl;
 
     Lista<Celda *>* celdasVecinas = new Lista<Celda *>();
     tablero->getCeldasVecinas(celdasVecinas, 1, 1, 1);

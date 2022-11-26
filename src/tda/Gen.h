@@ -1,6 +1,9 @@
 #ifndef GEN_H_
 #define GEN_H_
 
+#include <iostream>
+using namespace std;
+
 class Gen {
   private:
     unsigned int cargaGenetica;
@@ -10,6 +13,7 @@ class Gen {
   
   public:
     Gen(unsigned int maximaCargaGenetica, unsigned int cargaGenetica);
+    Gen(unsigned int maximaCargaGenetica);
     ~Gen();
     unsigned int getCargaGentica();
     void setCargaGentica(unsigned int cargaGenetica);
@@ -24,6 +28,16 @@ Gen::Gen(unsigned int maximaCargaGenetica, unsigned int cargaGenetica){
   verificar(maximaCargaGenetica, cargaGenetica);
     this->maximaCargaGenetica = maximaCargaGenetica;
   this->cargaGenetica = cargaGenetica;
+}
+
+/*
+  pre: -
+  pos: crea el gen con el valor aleatorio entre 0 y el maximo indicado. Tambien se setea el maximo de la carga genetica
+*/
+Gen::Gen(unsigned int maximaCargaGenetica){
+  // srand(time(0));
+  this->maximaCargaGenetica = maximaCargaGenetica;
+  this->cargaGenetica = ((float)rand())/RAND_MAX*255;
 }
 
 /* 

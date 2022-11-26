@@ -9,6 +9,7 @@ int main (){
   try{
     int filas = 3, columnas = 5, niveles = 4;
 
+
     Tablero * tablero = new Tablero(niveles, filas, columnas);
     AdminDeCeldas * adminDeCeldas = new AdminDeCeldas();
 
@@ -20,21 +21,13 @@ int main (){
     tablero->getCelda(2, 2, 2)->matarCelula(false);
     tablero->getCelda(3, 3, 3)->revivirCelula(false);
 
-    cout << tablero->getCelda(1, 1, 1)->getEstadoCelula() << endl;
-    cout << tablero->getCelda(4, 3, 2)->getEstadoCelula() << endl;
-    cout << tablero->getCelda(1, 3, 1)->getEstadoCelula() << endl;
-    cout << tablero->getCelda(2, 1, 2)->getEstadoCelula() << endl;
-    cout << tablero->getCelda(4, 1, 2)->getEstadoCelula() << endl;
-    cout << tablero->getCelda(2, 2, 2)->getEstadoCelula() << endl;
+    cout << tablero->getCelda(1, 1, 1)->getEstadoCelula(false) << endl;
+    cout << tablero->getCelda(4, 3, 2)->getEstadoCelula(false) << endl;
+    cout << tablero->getCelda(1, 3, 1)->getEstadoCelula(false) << endl;
+    cout << tablero->getCelda(2, 1, 2)->getEstadoCelula(false) << endl;
+    cout << tablero->getCelda(4, 1, 2)->getEstadoCelula(false) << endl;
+    cout << tablero->getCelda(2, 2, 2)->getEstadoCelula(false) << endl;
 
-    // cout << "Marcadas :" << endl;
-    // Celda * c112 = tablero->getCelda(1, 1, 2);
-    // cout << "!" << c112->getNivel() << ", " << c112->getFila() << ", " << c112->getColumna() << "!" << endl;
-    // cout << c112->getEstadoCelula() << endl;
-    // cout << tablero->getCelda(4, 3, 5)->getEstadoCelula() << endl;
-
-
-    
     Lista<Celda *>* celdasVecinas111 = new Lista<Celda *>();
     tablero->getCeldasVecinas(celdasVecinas111, 1, 1, 1);
     unsigned int vivas111 = adminDeCeldas->contarVivas(celdasVecinas111);
@@ -50,6 +43,19 @@ int main (){
     adminDeCeldas->actualizarCelda(tablero->getCelda(1, 1, 1), celdasVecinas111);
     adminDeCeldas->actualizarCelda(tablero->getCelda(2, 2, 2), celdasVecinas222);
     adminDeCeldas->actualizarCelda(tablero->getCelda(3, 3, 3), celdasVecinas333);
+
+    cout << tablero->getCelda(1, 1, 1)->getCargaGenetica(false, 1) << endl;
+    cout << tablero->getCelda(2, 2, 2)->getCargaGenetica(false, 1) << endl;
+    cout << tablero->getCelda(3, 3, 3)->getCargaGenetica(false, 1) << endl;
+    // sync
+    adminDeCeldas->syncCelda(tablero->getCelda(1, 1, 1));
+    adminDeCeldas->syncCelda(tablero->getCelda(2, 2, 2));
+    adminDeCeldas->syncCelda(tablero->getCelda(3, 3, 3));
+
+
+    cout << tablero->getCelda(1, 1, 1)->getCargaGenetica(false, 1) << endl;
+    cout << tablero->getCelda(2, 2, 2)->getCargaGenetica(false, 1) << endl;
+    cout << tablero->getCelda(3, 3, 3)->getCargaGenetica(false, 1) << endl;
 
     delete celdasVecinas111;
     delete celdasVecinas222;
