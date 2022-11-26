@@ -8,3 +8,4 @@ src/tests/Celda
 src/tests/testTablero
 src/tests/template.cpp
 src/tests/testAdminDeCeldas
+src/tests/testJuegoDeLaVida

@@ -7,10 +7,10 @@ using namespace std;
 
 int main (){
   try{
-    int filas = 3, columnas = 5, niveles = 4;
+    int filas = 3, columnas = 5, planos = 4;
 
 
-    Tablero * tablero = new Tablero(niveles, filas, columnas);
+    Tablero * tablero = new Tablero(planos, filas, columnas);
     AdminDeCeldas * adminDeCeldas = new AdminDeCeldas();
 
     // tablero->getCelda(1, 1, 1)->revivirCelula(false);

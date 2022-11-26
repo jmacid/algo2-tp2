@@ -19,6 +19,7 @@ class AdminDeCeldas {
     AdminDeCeldas();
     AdminDeCeldas(unsigned int X1, unsigned int X2, unsigned int X3);
     ~AdminDeCeldas();
+    bool estaVacio();
     unsigned int contarVivas(Lista<Celda *> * celdas);
     void actualizarCelda(Celda * celda, Lista<Celda *> * celdasVecinas);
 
@@ -64,6 +65,14 @@ AdminDeCeldas::AdminDeCeldas(unsigned int X1, unsigned int X2, unsigned int X3){
 AdminDeCeldas::~AdminDeCeldas(){}
 
 /*
+  pre: -
+  pos: retorna true si esta vacio
+*/
+bool AdminDeCeldas::estaVacio(){
+  return this == NULL;
+}
+
+/*
   pre: la lista no debe estar vacia
   pos: retorna la cantidad de celdas cuyas celulas estan vivas
 */
@@ -76,7 +85,7 @@ unsigned int AdminDeCeldas::contarVivas(Lista<Celda *> * celdas){
   while(celdas->avanzarCursor()){
     Celda * celda = celdas->obtenerCursor();
     if(celda->getEstadoCelula(false) == Viva){
-      // cout << "#" << celda->getNivel() << ", " << celda->getFila() << ", " << celda->getColumna() << "#" << endl;
+      // cout << "#" << celda->getPlano() << ", " << celda->getFila() << ", " << celda->getColumna() << "#" << endl;
       celdasVivas++;
     }
   }

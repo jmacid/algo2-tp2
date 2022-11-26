@@ -8,41 +8,46 @@ using namespace std;
 
 #include "Lista.h"
 #include "Celda.h"
+#include "AdminDeCeldas.h"
 
 class Tablero {
 
   private:
     unsigned int columnas;
     unsigned int filas;
-    unsigned int niveles;
+    unsigned int planos;
     Lista<Lista<Lista<Celda *> *> *> * tablero;
   
     void validarDimensiones(unsigned int nivel, unsigned int columna, unsigned int fila);
 
   public:
-    Tablero(unsigned int niveles, unsigned int columnas, unsigned int filas);
+    Tablero(unsigned int planos, unsigned int columnas, unsigned int filas);
     ~Tablero();
     unsigned int getCantidadColumnas();
     unsigned int getCantidadFilas();
-    unsigned int getCantidadNiveles();
+    unsigned int getCantidadPlanos();
     Celda * getCelda(unsigned int nivel, unsigned int fila, unsigned int columna);
     void getCeldasVecinas(Lista<Celda *>* celdasVecinas, unsigned int nivel, unsigned int fila, unsigned int columna);
     void getCeldasColumnaVecinas(Lista<Celda *>* celdasVecinas, Lista<Celda *> * columnaCeldas, unsigned int columna, bool incluirCentro);
     unsigned int calcularNivelCircular(unsigned int nivel, int incremento);
     unsigned int calcularColumnaCircular(unsigned int columna, int incremento);
     unsigned int calcularFilaCircular(unsigned int fila, int incremento);
+
+    void actualizarTablero(AdminDeCeldas* adminDeCeldas);
+    void syncTablero(AdminDeCeldas* adminDeCeldas);
+    void imprimirTablero();
 };
 
-Tablero::Tablero(unsigned int niveles, unsigned int filas, unsigned int columnas){
+Tablero::Tablero(unsigned int planos, unsigned int filas, unsigned int columnas){
 
   this->columnas = columnas;
   this->filas = filas;
-  this->niveles = niveles;
+  this->planos = planos;
 
     this->tablero = new Lista<Lista<Lista<Celda *> *> *>();
 
-    for(int i = 0; i < niveles; i++){
-      Lista<Lista<Celda *> *>* tempNivel = new Lista<Lista<Celda *> *>();
+    for(int i = 0; i < planos; i++){
+      Lista<Lista<Celda *> *>* tempPlano = new Lista<Lista<Celda *> *>();
 
       for(int j = 0; j < filas; j++){
         Lista<Celda *> * tempFila = new Lista<Celda *>();
@@ -52,10 +57,10 @@ Tablero::Tablero(unsigned int niveles, unsigned int filas, unsigned int columnas
           tempFila->agregar(new Celda(i+1, j+1, k+1)); // agrego el valor de la columna
         }
 
-        tempNivel->agregar(tempFila); // agrego columna
+        tempPlano->agregar(tempFila); // agrego columna
       }
 
-       this->tablero->agregar(tempNivel);
+       this->tablero->agregar(tempPlano);
     }
 
 
@@ -64,11 +69,11 @@ Tablero::Tablero(unsigned int niveles, unsigned int filas, unsigned int columnas
 Tablero::~Tablero(){
   this->tablero->iniciarCursor();
   while(this->tablero->avanzarCursor()){
-    Lista<Lista<Celda *> *>* tempNivel = this->tablero->obtenerCursor();
-    tempNivel->iniciarCursor();
+    Lista<Lista<Celda *> *>* tempPlano = this->tablero->obtenerCursor();
+    tempPlano->iniciarCursor();
 
-    while(tempNivel->avanzarCursor()){
-      Lista<Celda *> * tempFila = tempNivel->obtenerCursor();
+    while(tempPlano->avanzarCursor()){
+      Lista<Celda *> * tempFila = tempPlano->obtenerCursor();
       tempFila->iniciarCursor();
 
       while(tempFila->avanzarCursor()){
@@ -79,7 +84,7 @@ Tablero::~Tablero(){
       delete tempFila;
     }
 
-    delete tempNivel;
+    delete tempPlano;
   }
 
   delete this->tablero;
@@ -94,8 +99,8 @@ unsigned int Tablero::getCantidadFilas(){
   return this->filas;
 }
 
-unsigned int Tablero::getCantidadNiveles(){
-  return this->niveles;
+unsigned int Tablero::getCantidadPlanos(){
+  return this->planos;
 }
 
 /*
@@ -104,8 +109,8 @@ unsigned int Tablero::getCantidadNiveles(){
 Celda * Tablero::getCelda(unsigned int nivel, unsigned int fila, unsigned int columna){
   this->validarDimensiones(nivel, fila, columna);
 
-  Lista<Lista<Celda *> *> * tempNivel = this->tablero->obtener(nivel);
-  Lista<Celda *> * tempFila = tempNivel->obtener(fila);
+  Lista<Lista<Celda *> *> * tempPlano = this->tablero->obtener(nivel);
+  Lista<Celda *> * tempFila = tempPlano->obtener(fila);
   return tempFila->obtener(columna);
 }
 
@@ -120,14 +125,14 @@ void Tablero::getCeldasVecinas(Lista<Celda *>* celdasVecinas, unsigned int nivel
 
   this->validarDimensiones(nivel, fila, columna);
 
-  // Recorro los niveles
+  // Recorro los planos
   for( int i = -1; i < 2; i++){
     int nivelActual = calcularNivelCircular(nivel, i);
-    Lista<Lista<Celda *> *> * tempNivel = this->tablero->obtener(nivelActual);
+    Lista<Lista<Celda *> *> * tempPlano = this->tablero->obtener(nivelActual);
 
     for(int j = -1; j < 2; j++){
       int filaActual = calcularFilaCircular(fila, j);
-      Lista<Celda *> * tempFila = tempNivel->obtener(filaActual);
+      Lista<Celda *> * tempFila = tempPlano->obtener(filaActual);
 
       bool incluirCentro = !(i == 0 && j == 0);
       this->getCeldasColumnaVecinas(celdasVecinas, tempFila, columna, incluirCentro);
@@ -147,7 +152,7 @@ void Tablero::getCeldasColumnaVecinas(Lista<Celda *>* celdasVecinas, Lista<Celda
     if( i == 0 && !incluirCentro) continue;
     unsigned int columnaActual = this->calcularColumnaCircular(columna, i);
     Celda * celda = columnaCeldas->obtener(columnaActual);
-    cout << "(" << celda->getNivel() << ", " << celda->getFila() << ", " << celda->getColumna() << ")" << endl;
+    cout << "(" << celda->getPlano() << ", " << celda->getFila() << ", " << celda->getColumna() << ")" << endl;
     celdasVecinas->agregar(celda);
   }
 }
@@ -157,8 +162,8 @@ void Tablero::getCeldasColumnaVecinas(Lista<Celda *>* celdasVecinas, Lista<Celda
   pos: devlueve true si los parametros son mayores a cero y menores que los maximos establecidos en el constructor
 */
 void Tablero::validarDimensiones(unsigned int nivel, unsigned int fila, unsigned int columna){
-  if( nivel <= 0 || nivel > this->niveles){
-    throw "El nivel debe ser mayor a 0 y menor a " + std::to_string(this->niveles);
+  if( nivel <= 0 || nivel > this->planos){
+    throw "El nivel debe ser mayor a 0 y menor a " + std::to_string(this->planos);
   }
   if( fila <= 0 || fila > this->filas){
     throw "El nivel debe ser mayor a 0 y menor a " + std::to_string(this->filas);
@@ -172,9 +177,9 @@ unsigned int Tablero::calcularNivelCircular(unsigned int nivel, int incremento){
   int nivelActual = nivel + incremento;
 
   if(nivelActual <= 0)
-    return this->niveles;
+    return this->planos;
 
-  if(nivelActual > this->niveles)
+  if(nivelActual > this->planos)
     return 1;
 
   return nivelActual;
@@ -202,6 +207,93 @@ unsigned int Tablero::calcularColumnaCircular(unsigned int columna, int incremen
     return 1;
 
   return columnaActual;
+}
+
+/*
+  pre: adminDeCeldas no debe estar vacio
+  pos: recorre todo el tablero actualizando cada celda
+*/
+void Tablero::actualizarTablero(AdminDeCeldas* adminDeCeldas){
+  if(adminDeCeldas->estaVacio())
+    throw "adminDeCeldas no puede estar vacio";
+
+  this->tablero->iniciarCursor();
+  while(this->tablero->avanzarCursor()){
+    // Plano
+    Lista<Lista<Celda *> *> * tempPlano = this->tablero->obtenerCursor();
+    tempPlano->iniciarCursor();
+    while(tempPlano->avanzarCursor()){
+      // Fila
+      Lista<Celda *> * tempFila = tempPlano->obtenerCursor();
+      tempFila->iniciarCursor();
+      while(tempFila->avanzarCursor()){
+        // Columna
+        Celda * celda = tempFila->obtenerCursor();
+        cout << "Actualizando: " << celda->getPlano() << ", " << celda->getFila() << ", " << celda->getColumna() << endl;
+        Lista<Celda *>* celdasVecinas = new Lista<Celda *>();
+        this->getCeldasVecinas(celdasVecinas, celda->getPlano(), celda->getFila(), celda->getColumna());
+        adminDeCeldas->actualizarCelda(celda, celdasVecinas);
+        delete celdasVecinas;
+      }
+    }
+  }
+}
+
+/*
+  pre: adminDeCeldas no debe estar vacio
+  pos: recorre todo el tablero sincronizando cada celda
+*/
+void Tablero::syncTablero(AdminDeCeldas* adminDeCeldas){
+  if(adminDeCeldas->estaVacio())
+    throw "adminDeCeldas no puede estar vacio";
+
+  this->tablero->iniciarCursor();
+  while(this->tablero->avanzarCursor()){
+    // Plano
+    Lista<Lista<Celda *> *> * tempPlano = this->tablero->obtenerCursor();
+    tempPlano->iniciarCursor();
+    while(tempPlano->avanzarCursor()){
+      // Fila
+      Lista<Celda *> * tempFila = tempPlano->obtenerCursor();
+      tempFila->iniciarCursor();
+      while(tempFila->avanzarCursor()){
+        // Columna
+        Celda * celda = tempFila->obtenerCursor();
+        cout << "Sincronizando: " << celda->getPlano() << ", " << celda->getFila() << ", " << celda->getColumna() << endl;
+        adminDeCeldas->syncCelda(celda);
+      }
+    }
+  }
+}
+
+/*
+  pre: -
+  pos: recorre todo el tablero e imprime cada celda
+*/
+void Tablero::imprimirTablero(){
+  this->tablero->iniciarCursor();
+  int plano = 0;
+  while(this->tablero->avanzarCursor()){
+    // Plano
+    plano++;
+    cout << "Plano: " << plano << endl;
+    Lista<Lista<Celda *> *> * tempPlano = this->tablero->obtenerCursor();
+    tempPlano->iniciarCursor();
+    while(tempPlano->avanzarCursor()){
+      // Fila
+      Lista<Celda *> * tempFila = tempPlano->obtenerCursor();
+      tempFila->iniciarCursor();
+      while(tempFila->avanzarCursor()){
+        // Columna
+        Celda * celda = tempFila->obtenerCursor();
+        EstadoCelula estado = celda->getEstadoCelula(false);
+        char estadoChar = estado == Viva ? 'V' : 'M';
+        cout << estadoChar << " ";
+      }
+      cout << endl;
+    }
+    cout << endl;
+  }
 }
 
 #endif // TABLERO_H_
