@@ -9,7 +9,7 @@ int main (){
   try{
     JuegoDeLaVida * juegoDeLaVida = new JuegoDeLaVida();
 
-    juegoDeLaVida->iniciarTableroConTemplate();
+    juegoDeLaVida->iniciarTableroConTemplate1();
 
     // Turno 1
     juegoDeLaVida->pasarTurno();

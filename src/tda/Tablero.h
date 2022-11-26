@@ -111,6 +111,7 @@ unsigned int Tablero::getCantidadPlanos(){
 
 /*
   pre: los parametros deben estar dentro del rango establecido en el construcor
+  pos: retorna la celda de la ubicacion solicitada
 */
 Celda * Tablero::getCelda(unsigned int nivel, unsigned int fila, unsigned int columna){
   this->validarDimensiones(nivel, fila, columna);

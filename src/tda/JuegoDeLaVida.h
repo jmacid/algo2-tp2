@@ -28,7 +28,11 @@ class JuegoDeLaVida{
     unsigned int getCantidadFallecimientosTotales();
     unsigned int getCantidadTurnos();
 
-    void iniciarTableroConTemplate();
+    void iniciarTableroConTemplate1();
+    void iniciarTableroConTemplate2();
+    void iniciarTableroConTemplate3();
+    void ingresoManualViva(unsigned int plano, unsigned int fila, unsigned int columna);
+
     void pasarTurno();
     void imprimirTablero();
 
@@ -39,6 +43,8 @@ class JuegoDeLaVida{
     bool estaCongelado();
 
     void imprimirImagenDelTablero();
+
+    bool estaVacio();
 };
 
 
@@ -104,6 +110,7 @@ unsigned int JuegoDeLaVida::getCantidadNacimientosTotales(){
 unsigned int JuegoDeLaVida::getCantidadFallecimientosTotales(){
   return this->cantidadFallecimientosTotales;
 }
+
 /*
   pre: -
   pos: retorna la cantidad de turnos
@@ -112,16 +119,17 @@ unsigned int JuegoDeLaVida::getCantidadTurnos(){
   return this->cantidadTurnos;
 }
 
-
-void JuegoDeLaVida::iniciarTableroConTemplate(){
+/*
+  pre: -
+  pos: inicializa el juego con valores predeterminados
+*/
+void JuegoDeLaVida::iniciarTableroConTemplate1(){
   this->tablero->getCelda(1, 1, 2)->revivirCelula(false);
   this->tablero->getCelda(1, 3, 1)->revivirCelula(false);
   this->tablero->getCelda(2, 1, 2)->revivirCelula(false);
   this->tablero->getCelda(4, 1, 2)->revivirCelula(false);
   this->tablero->getCelda(2, 2, 2)->matarCelula(false);
   this->tablero->getCelda(3, 3, 3)->revivirCelula(false);
-
-  // this->tablero->getCelda(1,1,1)->setZombie();
 
   this->tablero->getCelda(1, 1, 1)->revivirCelula(false);
   this->tablero->getCelda(2, 1, 1)->setRadioactiva();
@@ -130,6 +138,56 @@ void JuegoDeLaVida::iniciarTableroConTemplate(){
   this->tablero->syncTablero(this->adminDeCeldas, true);
 
   this->cantidadVivas = 6;
+}
+
+/*
+  pre: -
+  pos: inicializa el juego con valores predeterminados
+*/
+void JuegoDeLaVida::iniciarTableroConTemplate2(){
+  this->tablero->getCelda(1, 1, 2)->revivirCelula(false);
+  this->tablero->getCelda(1, 3, 1)->revivirCelula(false);
+  this->tablero->getCelda(2, 1, 2)->revivirCelula(false);
+  this->tablero->getCelda(4, 1, 2)->revivirCelula(false);
+  this->tablero->getCelda(2, 2, 2)->matarCelula(false);
+  this->tablero->getCelda(3, 3, 3)->revivirCelula(false);
+
+  this->tablero->getCelda(1, 1, 1)->revivirCelula(false);
+  this->tablero->getCelda(2, 1, 1)->setRadioactiva();
+  this->tablero->getCelda(1, 1, 1)->setPortal(this->tablero->getCelda(2, 2, 2));
+
+  this->tablero->syncTablero(this->adminDeCeldas, true);
+
+  this->cantidadVivas = 6;
+}
+
+/*
+  pre: -
+  pos: inicializa el juego con valores predeterminados
+*/
+void JuegoDeLaVida::iniciarTableroConTemplate3(){
+  this->tablero->getCelda(1, 1, 2)->revivirCelula(false);
+  this->tablero->getCelda(1, 3, 1)->revivirCelula(false);
+  this->tablero->getCelda(2, 1, 2)->revivirCelula(false);
+  this->tablero->getCelda(4, 1, 2)->revivirCelula(false);
+  this->tablero->getCelda(2, 2, 2)->matarCelula(false);
+  this->tablero->getCelda(3, 3, 3)->revivirCelula(false);
+
+  this->tablero->getCelda(1,1,1)->setZombie();
+
+  this->tablero->syncTablero(this->adminDeCeldas, true);
+
+  this->cantidadVivas = 6;
+}
+
+/*
+  pre: los parametros deben estar dentro del rango del tablero
+  pos: revive la celula en la ubicacion solicitada
+
+*/
+void JuegoDeLaVida::ingresoManualViva(unsigned int plano, unsigned int fila, unsigned int columna){
+  this->tablero->getCelda(plano, fila, columna)->revivirCelula(false);
+  this->cantidadVivas += 1;
 }
 
 /*
@@ -206,6 +264,13 @@ void JuegoDeLaVida::imprimirImagenDelTablero(){
   this->tablero->imprimirImagenDelTablero();
 }
 
+/*
+  pre: -
+  pos: retorna true si esta vacio
+*/
+bool JuegoDeLaVida::estaVacio(){
+  return this == NULL;
+}
 
 
 #endif // JUEGO_DE_LA_VIDA_H_
