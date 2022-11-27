@@ -50,10 +50,12 @@ AdminDeCeldas::AdminDeCeldas(){
   pos: Inicializa los atributos con los valores de los parametros
 */
 AdminDeCeldas::AdminDeCeldas(unsigned int X1, unsigned int X2, unsigned int X3){
-  if( X1 > 26 || X2 > 26 ||X3 > 26)
+  if( X1 > 26 || X2 > 26 ||X3 > 26){
     throw "X1, X2 y X3 deben ser menores que 26";
-  if( X2 > X3 )
+  }
+  if( X2 > X3 ){
     throw "X2 debe ser menor que X3";
+  }
   
   this->X1 = X1;
   this->X2 = X2;
@@ -79,8 +81,9 @@ bool AdminDeCeldas::estaVacio(){
   pos: retorna la cantidad de celdas cuyas celulas estan vivas
 */
 unsigned int AdminDeCeldas::contarVivas(Lista<Celda *> * celdas){
-  if(celdas->estaVacia())
+  if(celdas->estaVacia()){
     throw "La lista de celdas esta vacia";
+  }
 
   unsigned int celdasVivas = 0;
   celdas->iniciarCursor();
@@ -149,10 +152,12 @@ void AdminDeCeldas::actualizarCelda(Celda * celda, Lista<Celda *> * celdasVecina
 */
 void AdminDeCeldas::heredarGenes(Celda * celda, bool futura, Lista<Celda *> * celdas){
 
-  if(celdas->estaVacia())
+  if(celdas->estaVacia()){
     throw "La lista de celdas no puede estar vacia";
-  if(celda->estaVacia())
+  }
+  if(celda->estaVacia()){
     throw "La celda no puede estar vacia";
+  }
 
   for(int i = 0; i < celda->getCantidadGenes(); i++){
     unsigned int nuevaCargaGenetica = this->actualizarGen(i + 1, celdas);
@@ -167,8 +172,9 @@ void AdminDeCeldas::heredarGenes(Celda * celda, bool futura, Lista<Celda *> * ce
   pos: genera la carga genetica en base a 3 funciones seleccionadas de forma aleatoria
 */
 unsigned int AdminDeCeldas::actualizarGen(unsigned int posicion, Lista<Celda *> * celdas){
-  if(celdas->estaVacia())
+  if(celdas->estaVacia()){
     throw "La lista de celdas no puede estar vacia";
+  }
 
   srand(time(0));
   float randNumber = (float)rand()/RAND_MAX;
@@ -189,8 +195,9 @@ unsigned int AdminDeCeldas::actualizarGen(unsigned int posicion, Lista<Celda *> 
   pos: devulve el gen cuyo valor es maximo segun la posicion.
 */
 unsigned int AdminDeCeldas::generadorPorMaximo(unsigned int posicion, Lista<Celda *> * celdas){
-  if(celdas->estaVacia())
+  if(celdas->estaVacia()){
     throw "La lista de celdas no puede estar vacia";
+  }
 
   unsigned int maximoGen = 0;
   celdas->iniciarCursor();
@@ -213,8 +220,9 @@ unsigned int AdminDeCeldas::generadorPorMaximo(unsigned int posicion, Lista<Celd
   pos: devulve el gen cuyo valor es minimo segun la posicion.
 */
 unsigned int AdminDeCeldas::generadorPorMinimo(unsigned int posicion, Lista<Celda *> * celdas){
-  if(celdas->estaVacia())
+  if(celdas->estaVacia()){
     throw "La lista de celdas no puede estar vacia";
+  }
 
   unsigned int minimoGen = -1;  // Valor maximo posible para este tipo de dato
   celdas->iniciarCursor();
@@ -234,8 +242,9 @@ unsigned int AdminDeCeldas::generadorPorMinimo(unsigned int posicion, Lista<Celd
 
 
 unsigned int AdminDeCeldas::generadorPromedio(unsigned int posicion, Lista<Celda *> * celdas){
-  if(celdas->estaVacia())
+  if(celdas->estaVacia()){
     throw "La lista de celdas no puede estar vacia";
+  }
 
   unsigned int suma = 0;
   unsigned int cantidad = 0;
@@ -259,8 +268,9 @@ unsigned int AdminDeCeldas::generadorPromedio(unsigned int posicion, Lista<Celda
   pos: copia los valores de la celda futura en la celda actual o al reves
 */
 void AdminDeCeldas::syncCelda(Celda *celda, bool destinoFutura){
-  if(celda->estaVacia())
+  if(celda->estaVacia()){
     throw "La celda esta vacia";
+  }
 
   if( celda->getEstadoCelula(!destinoFutura) == Viva){
     celda->revivirCelula(destinoFutura);
@@ -275,6 +285,10 @@ void AdminDeCeldas::syncCelda(Celda *celda, bool destinoFutura){
   }
 }
 
+/*
+  pre: -
+  pos: complementa una celda. Si la auxiliar esta viva la mata, y sus genes sera los de la auxiliar menos cargaMaximaGenetica.
+*/
 void AdminDeCeldas::complementarCelda(Celda* celda, unsigned int& nacimientos, unsigned int& fallecimientos){
   if(celda->getEstadoCelulaAuxiliar(true) == Viva){
     celda->matarCelula(true);
@@ -292,6 +306,10 @@ void AdminDeCeldas::complementarCelda(Celda* celda, unsigned int& nacimientos, u
   }
 }
 
+/*
+  pre: -
+  pos: copia una celda. Si la auxiliar esta viva la revive, y sus genes sera los de la auxiliar.
+*/
 void AdminDeCeldas::copiarCelda(Celda* celda, unsigned int& nacimientos, unsigned int& fallecimientos){
   if(celda->getEstadoCelulaAuxiliar(true) == Viva){
     celda->revivirCelula(true);

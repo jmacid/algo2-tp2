@@ -26,8 +26,9 @@ class BmpHandle {
   pos: inicializa el objeto
 */
 BmpHandle::BmpHandle(unsigned int filas, unsigned int columnas){
-  if( filas <= 0 || columnas <= 0)
+  if( filas <= 0 || columnas <= 0){
     throw "El ancho y alto de los datos ";
+  }
   this->altoImagen = filas; // * altoCuadrado;
   this->anchoImagen = columnas; // * anchoCuadrado;
 }
@@ -44,20 +45,25 @@ BmpHandle::~BmpHandle(){}
   pos: devuelve true si se cumplen con las condiciones de la pre
 */
 void BmpHandle::validar(unsigned int fila, unsigned int columna, unsigned char R, unsigned char G, unsigned char B){
-  if(fila < 0 || columna < 0)
+  if(fila < 0 || columna < 0){
     throw "La fila y la posicion debe ser mayor a cero";
+  }
 
-  if(fila > this->altoImagen || columna > this->anchoImagen)
+  if(fila > this->altoImagen || columna > this->anchoImagen){
     throw "La fila y la columna deben ser menores al ancho de la imagen";
+  }
 
-  if(R < 0 || R > 255)
+  if(R < 0 || R > 255){
     throw "El color rojo tiene que estar entre 0 y 255";
+  }
 
-  if(G < 0 || G > 255)
+  if(G < 0 || G > 255){
     throw "El color verde tiene que estar entre 0 y 255";
+  }
   
-  if(B < 0 || B > 255)
-    throw "El color azul tiene que estar entre 0 y 255"; 
+  if(B < 0 || B > 255){
+    throw "El color azul tiene que estar entre 0 y 255";
+  }
 }
 
 /*

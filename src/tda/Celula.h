@@ -53,8 +53,9 @@ Celula::Celula() {
   pos: crea el objeto celula muerta y los genes en un numero aleatorio
 */
 Celula::Celula(unsigned int cantidadGenes, unsigned int maximaCargaGenetica) {
-  if(cantidadGenes <= 0)
-    throw "(celula) Cantidad de genes no puede ser menos o igual a cero";
+  if(cantidadGenes <= 0){
+    throw "Cantidad de genes no puede ser menos o igual a cero";
+  }
 
   this->estado = Muerta;
   this->genes = new Vector<Gen *>(cantidadGenes, NULL);
@@ -70,7 +71,6 @@ Celula::Celula(unsigned int cantidadGenes, unsigned int maximaCargaGenetica) {
   pos: crea el objeto celula muerta con todos los genes en 0 
 */
 Celula::~Celula() {
-
   int longuitud = this->genes->getLongitud();
   for(int i = 0; i < longuitud; i++ ){
     Gen* gen = this->genes->obtener(i + 1);
@@ -111,8 +111,9 @@ bool Celula::celulaMuerta(){
   pos: retorna la carga genetica del gen solicitado
 */
 unsigned int Celula::getCargaGenetica(unsigned int posicion){
-  if( posicion < 0 || posicion > this->genes->getLongitud())
+  if( posicion < 0 || posicion > this->genes->getLongitud()){
     throw "La posicion solicitada es incorrecta. Debe ser mayor a cero y menor a " + this->genes->getLongitud();
+  }
   return this->genes->obtener(posicion)->getCargaGentica();
 }
 

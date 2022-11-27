@@ -133,14 +133,26 @@ void Celda::matarCelula(bool futura){
   }
 }
 
+/*
+  pre:-
+  pos: devuelve el valor del plano
+*/
 unsigned int Celda::getPlano(){
   return this->plano;
 }
 
+/*
+  pre:-
+  pos: devuelve el valor de la fila
+*/
 unsigned int Celda::getFila(){
   return this->fila;
 }
 
+/*
+  pre:-
+  pos: devuelve el valor de la columna
+*/
 unsigned int Celda::getColumna(){
   return this->columna;
 }
@@ -153,9 +165,18 @@ bool Celda::estaVacia(){
   return this == NULL;
 }
 
+/*
+  pre:-
+  pos: devuelve true si la celda esta viva
+*/
 bool Celda::celulaViva(){
   return this->celula->celulaViva();
 }
+
+/*
+  pre:-
+  pos: devuelve true si la celda esta muerta
+*/
 bool Celda::celulaMuerta(){
   return this->celula->celulaMuerta();
 }
@@ -165,8 +186,9 @@ bool Celda::celulaMuerta(){
   pos: devuelve la carga genetica de la posicion solicitada
 */
 unsigned int Celda::getCargaGenetica(bool futura, unsigned int posicion){
-  if( posicion <= 0 || posicion > this->celula->getCantidadGenes())
+  if( posicion <= 0 || posicion > this->celula->getCantidadGenes()){
     throw "Posicion invalida";
+  }
 
   if(futura){
     return this->celulaFutura->getCargaGenetica(posicion);
@@ -178,10 +200,12 @@ unsigned int Celda::getCargaGenetica(bool futura, unsigned int posicion){
 
 /*
   pre: posicion tiene que ser mayor a 0 y menor a la cantidad de genes que tenga la celula
+  pos: modifica la carga genetica de la celula de la celda
 */
 void Celda::setCargaGenetica(bool futura, unsigned int posicion, unsigned int cargaGenetica){
-  if( posicion <= 0 || posicion > this->celula->getCantidadGenes())
+  if( posicion <= 0 || posicion > this->celula->getCantidadGenes()){
     throw "Posicion invalida";
+  }
 
   if(futura){
     this->celulaFutura->actualizarGen(posicion, cargaGenetica);
@@ -191,6 +215,10 @@ void Celda::setCargaGenetica(bool futura, unsigned int posicion, unsigned int ca
   }
 }
 
+/*
+  pre:-
+  pos: devuelve la carga genetica de la celula
+*/
 unsigned int Celda::getCantidadGenes(){
   return this->celula->getCantidadGenes();
 }
@@ -250,8 +278,9 @@ EstadoCelula Celda::getEstadoCelulaAuxiliar(bool futura){
   pos: devuelve la carga genetica de la posicion solicitada
 */
 unsigned int Celda::getCargaGeneticaAuxiliar(bool futura, unsigned int posicion){
-  if( posicion <= 0 || posicion > this->celula->getCantidadGenes())
+  if( posicion <= 0 || posicion > this->celula->getCantidadGenes()){
     throw "Posicion invalida";
+  }
 
   return this->celdaAuxiliar->getCargaGenetica(futura, posicion);
 }

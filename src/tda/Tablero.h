@@ -40,8 +40,14 @@ class Tablero {
     void imprimirImagenDelTablero();
 };
 
+/*
+  pre: planos, filas y columnas debe ser mayor a cero
+  pos: inicializa el objeto con el planos, filas y columnas de los argumentos y solicita memoria para las celdas y listas que integran el tablero.
+*/
 Tablero::Tablero(unsigned int planos, unsigned int filas, unsigned int columnas){
-
+  if(planos == 0 || filas == 0 || columnas == 0){
+    throw "El plano, fila y columna debe ser distinto a cero";
+  }
   this->columnas = columnas;
   this->filas = filas;
   this->planos = planos;
@@ -68,6 +74,10 @@ Tablero::Tablero(unsigned int planos, unsigned int filas, unsigned int columnas)
 
 }
 
+/*
+  pre: -
+  pos: destruye el objeto
+*/
 Tablero::~Tablero(){
   this->tablero->iniciarCursor();
   while(this->tablero->avanzarCursor()){
@@ -97,14 +107,26 @@ Tablero::~Tablero(){
 }
 
 
+/*
+  pre:-
+  pos: devuelve la cantidad de columnas
+*/
 unsigned int Tablero::getCantidadColumnas(){
   return this->columnas;
 }
 
+/*
+  pre:-
+  pos: devuelve la cantidad de filas
+*/
 unsigned int Tablero::getCantidadFilas(){
   return this->filas;
 }
 
+/*
+  pre:-
+  pos: devuelve la cantidad de planos
+*/
 unsigned int Tablero::getCantidadPlanos(){
   return this->planos;
 }
@@ -124,11 +146,12 @@ Celda * Tablero::getCelda(unsigned int nivel, unsigned int fila, unsigned int co
 
 /*
   pre: celdas vecinas debe estar vacia.
+  pos: devuelve en celdasVecinas las celdas vecinas a la celda dada por la ubicacion porvista
 */
 void Tablero::getCeldasVecinas(Lista<Celda *>* celdasVecinas, unsigned int nivel, unsigned int fila, unsigned int columna){
-  // Lista<Celda *>* celdasVecinas2 = new Lista<Celda *>();
-  if( !celdasVecinas->estaVacia())
+  if( !celdasVecinas->estaVacia()){
     throw "La lista debe estar vacia";
+  }
 
   this->validarDimensiones(nivel, fila, columna);
 
@@ -153,8 +176,10 @@ void Tablero::getCeldasVecinas(Lista<Celda *>* celdasVecinas, unsigned int nivel
   pos: agrega a la lista celdasVecinas las celdas vecinas e incluye la celda central si esta incluirCentro en true
 */
 void Tablero::getCeldasColumnaVecinas(Lista<Celda *>* celdasVecinas, Lista<Celda *> * columnaCeldas, unsigned int columna, bool incluirCentro){
-  if( columnaCeldas->estaVacia())
+  if( columnaCeldas->estaVacia()){
     throw "La columna esta vacia";
+  }
+
   for(int i = -1; i < 2; i++){
     if( i == 0 && !incluirCentro) continue;
     unsigned int columnaActual = this->calcularColumnaCircular(columna, i);
@@ -180,38 +205,56 @@ void Tablero::validarDimensiones(unsigned int nivel, unsigned int fila, unsigned
   }
 }
 
+/*
+  pre: -
+  pos: calcula el nivel circular
+*/
 unsigned int Tablero::calcularNivelCircular(unsigned int nivel, int incremento){
   int nivelActual = nivel + incremento;
 
-  if(nivelActual <= 0)
+  if(nivelActual <= 0){
     return this->planos;
+  }
 
-  if(nivelActual > this->planos)
+  if(nivelActual > this->planos){
     return 1;
+  }
 
   return nivelActual;
 }
 
+/*
+  pre: -
+  pos: calcula la fila circular
+*/
 unsigned int Tablero::calcularFilaCircular(unsigned int fila, int incremento){
   int filaActual = fila + incremento;
 
-  if(filaActual <= 0)
+  if(filaActual <= 0){
     return this->filas;
+  }
 
-  if(filaActual > this->filas)
+  if(filaActual > this->filas){
     return 1;
+  }
 
   return filaActual;
 }
 
+/*
+  pre: -
+  pos: calcula la columna circular
+*/
 unsigned int Tablero::calcularColumnaCircular(unsigned int columna, int incremento){
   int columnaActual = columna + incremento;
 
-  if(columnaActual <= 0)
+  if(columnaActual <= 0){
     return this->columnas;
+  }
 
-  if(columnaActual > this->columnas)
+  if(columnaActual > this->columnas){
     return 1;
+  }
 
   return columnaActual;
 }
@@ -221,8 +264,9 @@ unsigned int Tablero::calcularColumnaCircular(unsigned int columna, int incremen
   pos: recorre todo el tablero actualizando cada celda
 */
 void Tablero::actualizarTablero(AdminDeCeldas* adminDeCeldas, unsigned int& nacimientos, unsigned int& fallecimientos){
-  if(adminDeCeldas->estaVacio())
+  if(adminDeCeldas->estaVacio()){
     throw "adminDeCeldas no puede estar vacio";
+  }
 
   this->tablero->iniciarCursor();
   while(this->tablero->avanzarCursor()){
@@ -252,8 +296,9 @@ void Tablero::actualizarTablero(AdminDeCeldas* adminDeCeldas, unsigned int& naci
   pos: recorre todo el tablero sincronizando cada celda futura con la actual o al reves
 */
 void Tablero::syncTablero(AdminDeCeldas* adminDeCeldas, bool destinoFutura){
-  if(adminDeCeldas->estaVacio())
+  if(adminDeCeldas->estaVacio()){
     throw "adminDeCeldas no puede estar vacio";
+  }
 
   this->tablero->iniciarCursor();
   while(this->tablero->avanzarCursor()){

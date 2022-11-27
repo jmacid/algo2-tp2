@@ -133,7 +133,6 @@ void JuegoDeLaVida::iniciarTableroConTemplate1(){
 
   this->tablero->getCelda(1, 1, 1)->revivirCelula(false);
   this->tablero->getCelda(2, 1, 1)->setRadioactiva();
-  // this->tablero->getCelda(1, 1, 1)->setPortal(this->tablero->getCelda(2, 2, 2));
 
   this->tablero->syncTablero(this->adminDeCeldas, true);
 

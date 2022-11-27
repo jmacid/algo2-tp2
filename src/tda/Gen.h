@@ -26,7 +26,7 @@ class Gen {
 */
 Gen::Gen(unsigned int maximaCargaGenetica, unsigned int cargaGenetica){
   verificar(maximaCargaGenetica, cargaGenetica);
-    this->maximaCargaGenetica = maximaCargaGenetica;
+  this->maximaCargaGenetica = maximaCargaGenetica;
   this->cargaGenetica = cargaGenetica;
 }
 
@@ -35,7 +35,6 @@ Gen::Gen(unsigned int maximaCargaGenetica, unsigned int cargaGenetica){
   pos: crea el gen con el valor aleatorio entre 0 y el maximo indicado. Tambien se setea el maximo de la carga genetica
 */
 Gen::Gen(unsigned int maximaCargaGenetica){
-  // srand(time(0));
   this->maximaCargaGenetica = maximaCargaGenetica;
   this->cargaGenetica = ((float)rand())/RAND_MAX*255;
 }
@@ -46,6 +45,10 @@ Gen::Gen(unsigned int maximaCargaGenetica){
 */
 Gen::~Gen(){}
 
+/*
+  pre: -
+  pos: retorna la carga genetica
+*/
 unsigned int Gen::getCargaGentica(){
   return this->cargaGenetica;
 }
@@ -84,11 +87,13 @@ unsigned int Gen::getMaximoCargaGenetica(){
   pos: tira una excepcion cuando maximaCargaGenetica o cargaGenetica no respeta los rangos
 */
 void Gen::verificar(unsigned int maximaCargaGenetica, unsigned int cargaGenetica){
-  if(maximaCargaGenetica < 0)
+  if(maximaCargaGenetica < 0){
     throw "La maxima carga genetica debe ser mayor a cero";
+  }
 
-  if(cargaGenetica > maximaCargaGenetica)
+  if(cargaGenetica > maximaCargaGenetica){
     throw "El rango de cargaGenetica debe estar entre 0 y 255";
+  }
 }
 
 #endif // GEN_H_

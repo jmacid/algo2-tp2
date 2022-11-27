@@ -9,3 +9,7 @@ src/tests/testTablero
 src/tests/template.cpp
 src/tests/testAdminDeCeldas
 src/tests/testJuegoDeLaVida
+src/tests/testBMP
+*.bmp
+EasyBMP_1.06.zip
+EasyBMP_1.06/
