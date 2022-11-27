@@ -24,10 +24,15 @@ using namespace std;
 #define MESSAGE_FINALIZAR "[f] Finalizar juego"
 #define MESSAGE_INGRESAR_CANTIDAD_TURNOS "Ingresar cantidad de turnos: "
 
+#define MESSAGE_PLANOS "Ingrese la cantidad de planos del tablero: "
+#define MESSAGE_FILAS "Ingrese la cantidad de filas del tablero: "
+#define MESSAGE_COLUMNAS "Ingrese la cantidad de columnas del tablero: "
+
 /*
   Prototipos
 */
-void iniciarJuego(JuegoDeLaVida * juegoDeLaVida, char opcionMenu);
+void ingresarTamanioTablero(JuegoDeLaVida ** juegoDeLaVida);
+void iniciarJuego(JuegoDeLaVida ** juegoDeLaVida, char opcionMenu);
 void ingresarCelulasVivas(JuegoDeLaVida * juegoDeLaVida);
 void elegirOpcionParaContinuar(bool& turno, unsigned int& cantidadTurnos, bool& reiniciar, bool& finalizar);
 void finalizarJuego(JuegoDeLaVida * juegoDeLaVida);
@@ -38,14 +43,13 @@ int main (){
     bool turno = true, reiniciar = false, finalizar = false;
     unsigned int cantidadTurnos = 0;
     char opcionMenu = ' ';
-    JuegoDeLaVida * juegoDeLaVida = new JuegoDeLaVida();
+    JuegoDeLaVida * juegoDeLaVida = NULL;
 
     while(1){
 
       if(iniciar || reiniciar){
         iniciar = false;
         reiniciar = false;
-        juegoDeLaVida = new JuegoDeLaVida();
 
         cout << MESSAGE_INIT << endl;
         cout << MESSAGE_CONF_1 << endl;
@@ -58,7 +62,7 @@ int main (){
 
         cout << opcionMenu << endl;
 
-        iniciarJuego(juegoDeLaVida, opcionMenu);
+        iniciarJuego(&juegoDeLaVida, opcionMenu);
 
         juegoDeLaVida->imprimirStats();
 
@@ -110,31 +114,59 @@ void finalizarJuego(JuegoDeLaVida * juegoDeLaVida){
 }
 
 /*
-  pre: el juego no puede estar vacio y la opcion tiene que ser un numero entero entre 1 y 4.
+  pre: el juego tiene que estar vacio y la opcion tiene que ser un numero entero entre 1 y 4.
   pos: inicializa el juego segun la opcion elegida
 */
-void iniciarJuego(JuegoDeLaVida * juegoDeLaVida, char opcionMenu){
-  if(juegoDeLaVida->estaVacio()){
-    throw "El juego esta vacio";
+void iniciarJuego(JuegoDeLaVida ** juegoDeLaVida, char opcionMenu){
+  if(!(*juegoDeLaVida)->estaVacio()){
+    throw "El juego tiene que estar vacio";
   }
 
   if(opcionMenu == '1'){
-    juegoDeLaVida->iniciarTableroConTemplate1();
+    *juegoDeLaVida = new JuegoDeLaVida();
+    (*juegoDeLaVida)->iniciarTableroConTemplate1();
   }
   else if(opcionMenu == '2'){
-    juegoDeLaVida->iniciarTableroConTemplate2();
+    *juegoDeLaVida = new JuegoDeLaVida();
+    (*juegoDeLaVida)->iniciarTableroConTemplate2();
   }
   else if(opcionMenu == '3'){
-    juegoDeLaVida->iniciarTableroConTemplate3();
+    *juegoDeLaVida = new JuegoDeLaVida();
+    (*juegoDeLaVida)->iniciarTableroConTemplate3();
   }
   else if(opcionMenu == '4'){
-    ingresarCelulasVivas(juegoDeLaVida);
+    // *juegoDeLaVida = new JuegoDeLaVida();
+    ingresarTamanioTablero(juegoDeLaVida);
+    ingresarCelulasVivas(*juegoDeLaVida);
   }
   else{
     throw "Opcion incorrecta";
   }
 }
 
+
+/*
+  pre: el juego no puede estar vacio
+  pos: inicializa el tablero del juego con el tamanio ingresado por el usuario
+*/
+void ingresarTamanioTablero(JuegoDeLaVida ** juegoDeLaVida){
+  if(!(*juegoDeLaVida)->estaVacio()){
+    throw "El juego tiene que estar vacio";
+  }
+
+  int planos, filas, columnas;
+
+  cout << MESSAGE_PLANOS;
+  cin >> planos;
+
+  cout << MESSAGE_FILAS;
+  cin >> filas;
+
+  cout << MESSAGE_COLUMNAS;
+  cin >> columnas;
+
+  *juegoDeLaVida = new JuegoDeLaVida(planos, filas, columnas);
+}
 
 /*
   pre: el juego no puede estar vacio
