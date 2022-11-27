@@ -79,7 +79,6 @@ Celda::Celda(unsigned int plano, unsigned int fila, unsigned int columna){
 Celda::~Celda(){
   delete this->celula;
   delete this->celulaFutura;
-  delete this->celdaAuxiliar;
 
   this->celula = NULL;
   this->celulaFutura = NULL;
