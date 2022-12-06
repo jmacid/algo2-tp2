@@ -252,7 +252,7 @@ void JuegoDeLaVida::imprimirStats(){
   pos: retorna true si el juego no ha sufrido ni nacimientos ni fallecimientos en el ultimo turno
 */
 bool JuegoDeLaVida::estaCongelado(){
-  return this->cantidadNacimientosTurno == 0 && this->cantidadFallecimientosTurno == 0;
+  return this->cantidadNacimientosTurno == 0 && this->cantidadFallecimientosTurno == 0 && this->cantidadTurnos != 0;
 }
 
 /*

@@ -35,7 +35,7 @@ void ingresarTamanioTablero(JuegoDeLaVida ** juegoDeLaVida);
 void iniciarJuego(JuegoDeLaVida ** juegoDeLaVida, char opcionMenu);
 void ingresarCelulasVivas(JuegoDeLaVida * juegoDeLaVida);
 void elegirOpcionParaContinuar(bool& turno, unsigned int& cantidadTurnos, bool& reiniciar, bool& finalizar);
-void finalizarJuego(JuegoDeLaVida * juegoDeLaVida);
+void finalizarJuego(JuegoDeLaVida ** juegoDeLaVida);
 
 int main (){
   try {
@@ -82,10 +82,10 @@ int main (){
         }
       }
       else if(reiniciar){
-        finalizarJuego(juegoDeLaVida);
+        finalizarJuego(&juegoDeLaVida);
       }
       else if(finalizar){
-        finalizarJuego(juegoDeLaVida);
+        finalizarJuego(&juegoDeLaVida);
         return 0;
       }
     }
@@ -109,8 +109,9 @@ int main (){
   pre: -
   pos: libera la memoria solicitada
 */
-void finalizarJuego(JuegoDeLaVida * juegoDeLaVida){
-  delete juegoDeLaVida;
+void finalizarJuego(JuegoDeLaVida ** juegoDeLaVida){
+  delete *juegoDeLaVida;
+  *juegoDeLaVida = NULL;
 }
 
 /*

@@ -109,8 +109,21 @@ void AdminDeCeldas::actualizarCelda(Celda * celda, Lista<Celda *> * celdasVecina
 
   unsigned int vivas = contarVivas(celdasVecinas);
 
+  // La celda Zombie no muere y sus genes son 0
+  if(celda->esZombie()){
+    celda->revivirCelula(true);
+    for(int i = 0; i < celda->getCantidadGenes(); i++){
+      celda->setCargaGenetica(true, i + 1, 0);
+    }
+  }
+  else if(celda->esComplementaria()){
+    complementarCelda(celda, nacimientos, fallecimientos);
+  }
+  else if(celda->esPortal()){
+    copiarCelda(celda, nacimientos, fallecimientos);
+  }
   // Una célula muerta con exactamente X1 células vecinas vivas "nace"
-  if(celda->celulaMuerta() && vivas == this->X1){
+  else if(celda->celulaMuerta() && vivas == this->X1){
     celda->revivirCelula(true);
     // cout << "v(" << celda->getPlano() << ", " << celda->getFila() << ", " << celda->getColumna() << ")" << endl;
     nacimientos++;
@@ -126,20 +139,6 @@ void AdminDeCeldas::actualizarCelda(Celda * celda, Lista<Celda *> * celdasVecina
   else if (celda->celulaViva() && celda->getComportamiento() == Decay){
     for(int i = 0; i < celda->getCantidadGenes(); i++){
       celda->setCargaGenetica(true, i + 1, 300);
-    }
-  }
-  else if(celda->esComplementaria()){
-    complementarCelda(celda, nacimientos, fallecimientos);
-  }
-  else if(celda->esPortal()){
-    copiarCelda(celda, nacimientos, fallecimientos);
-  }
-
-  // La celda Zombie no muere y sus genes son 0
-  if(celda->esZombie()){
-    celda->revivirCelula(true);
-    for(int i = 0; i < celda->getCantidadGenes(); i++){
-      celda->setCargaGenetica(true, i + 1, 0);
     }
   }
 
@@ -290,11 +289,11 @@ void AdminDeCeldas::syncCelda(Celda *celda, bool destinoFutura){
   pos: complementa una celda. Si la auxiliar esta viva la mata, y sus genes sera los de la auxiliar menos cargaMaximaGenetica.
 */
 void AdminDeCeldas::complementarCelda(Celda* celda, unsigned int& nacimientos, unsigned int& fallecimientos){
-  if(celda->getEstadoCelulaAuxiliar(true) == Viva){
+  if(celda->getEstadoCelulaAuxiliar(true) == Viva && celda->celulaViva()){
     celda->matarCelula(true);
     fallecimientos++;
   }
-  else{
+  else if (celda->getEstadoCelulaAuxiliar(true) == Muerta && celda->celulaMuerta()) {
     celda->revivirCelula(true);
     nacimientos++;
   }
@@ -311,11 +310,11 @@ void AdminDeCeldas::complementarCelda(Celda* celda, unsigned int& nacimientos, u
   pos: copia una celda. Si la auxiliar esta viva la revive, y sus genes sera los de la auxiliar.
 */
 void AdminDeCeldas::copiarCelda(Celda* celda, unsigned int& nacimientos, unsigned int& fallecimientos){
-  if(celda->getEstadoCelulaAuxiliar(true) == Viva){
+  if(celda->getEstadoCelulaAuxiliar(true) == Viva && celda->celulaMuerta()){
     celda->revivirCelula(true);
     nacimientos++;
   }
-  else{
+  else if (celda->getEstadoCelulaAuxiliar(true) == Muerta && celda->celulaViva()){
     celda->matarCelula(true);
     fallecimientos++;
   }
